@@ -1,2 +1,2 @@
 pathway_id, from_stop_id, to_stop_id, pathway_mode, is_bidirectional, length, traversal_time, stair_count, max_slope, min_width, signposted_as, reversed_signposted_as
-1, 1, 1, 15, 0, 23.1, 4, 5, 23.5, 35.5, 'test', 'reverse_test'
+1, 1, 1, 15, 0, 23.1, 4, 5, 23.5, 35.5, test, reverse_test

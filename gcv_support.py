@@ -13,7 +13,7 @@ import pandas as pd
 # first argument is the name/path of the csvfile to be converted to the table
 # second argument is the name of the table to be created
 def csv_to_table(file_name, table_name, con):
-    print("csv_to_table")
+    #print("csv_to_table")
     # skipinitialspace skips spaces after (comma) delimiters
     # lines that start with # (commented lines) will be ignored 
     df = pd.read_csv(file_name, skipinitialspace='True', comment="#")
@@ -27,7 +27,7 @@ def csv_to_table(file_name, table_name, con):
 # this function will read the file schema_version_schema.csv
 # to get the schema definition
 def create_schema_table(schema_name, con):
-    print("create_schema_table")
+    #print("create_schema_table")
     df = pd.read_csv('schemas/' + schema_name + "_schema.csv", skipinitialspace='True', 
         comment='#')
     create_table = "CREATE TABLE '" + schema_name + "'("  
@@ -40,8 +40,7 @@ def create_schema_table(schema_name, con):
     cur.execute(create_table)
 
 def check_schema(dir_name, file_name, schema_table, con):
-    print("check_schema")
-    print("Running test on file: " + file_name)
+    print("Checking schema: " + file_name)
     # check to see if success or fail in file name
     expect_success = True # assume we expect success
     if(re.search('Fail', file_name, re.IGNORECASE) != None):
@@ -58,22 +57,18 @@ def check_schema(dir_name, file_name, schema_table, con):
     except sql.IntegrityError as err:
         if(expect_success == False):
             print("Success: Test on " + file_name + " failed as expected.")
-            print(os.linesep)
         else:
             print("FAIL: Test on " + file_name + " failed, expected to succeed.")
             print(err)
-            print(os.linesep)
     else:
         if(expect_success == True):
-            print("Success: Test on " + file_name + "succeeded as expected")
-            print(os.linesep)
+            print("Success: Test on " + file_name + " succeeded as expected")
         else:
             print("FAIL: Test on " + file_name + " succeeded, expected to fail.")
-            print(os.linesep) 
+
 
 
 def check_rules(schema_name, file_name, con):
-    print("check_rules")
     print("Checking rules on: " + file_name)
     df = pd.read_csv('rules/' + schema_name + "_rules", skipinitialspace='True', 
         comment='#')
@@ -85,14 +80,18 @@ def check_rules(schema_name, file_name, con):
         fail_msg = row[2]
         rule_sql = row[3]    
         print("Checking rule: " + rule_name)
-
+        
         # use regex sub to replace TABLE with tablename
-        print(rule_sql)
-        rule_sql = re.sub('TABLE', file_name, rule_sql)    
-        cur.execute("SELECT * from 'pathways_v1.0'") # placeholder execution - quote issue
+        sql_file_name = "'" + file_name + "'"
+        rule_sql = re.sub('TABLE', sql_file_name, rule_sql)    
+        # print(rule_sql)
+        cur.execute(rule_sql) 
         row = cur.fetchone()
+        print(row)
         if row is not None:
             print("FAIL:" + rule_name + " failed " + fail_msg)
         else:
             print("Success: " + rule_name + " succeeded")
+
+
 

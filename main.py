@@ -14,37 +14,37 @@
 
 # TODOS: 
 # need to verify IDs are UTF-8 characters?
-# need to add support if pathways data files don't contain all
-# fields (that is omit )
+# need to add support if pathways data files don't contain all fields
 # pathways rules are graph traversals - need to add checks for those
 # fks to be enforced with rules or somesuch
+# rules fails have an issue with the 'fail' in name
 
-
-import os as os
 import re as re
-#from distutils.log import ERROR
 import sqlite3 as sql
-#from ssl import _create_default_https_context
-import pandas as pd
-import gcv_support as sup
-import gcv_testfcns as tests
+import gcv_testfcns as gcvtests
 
 
-# things that should be params
-# test - file, release or script
-# if file or release - path to file / directory
-# for file - file type (pathways.txt, levels.txt)
-# for release - pathways or flex
-data_schema = 'pathways' # data type being tested - need to distinguish between
-# pathways as a data schema and pathways as a file type
-version = 'v1.0' # schema version being tested
 
-# need to think about testing individual files vs testing a release of files
-# which is separate from the test structure I created to test this script
-# probably need to move the test structure for this script out of
-# this script and into a test script...
-# think will want this script to be able to test a single file
-# or a set of files 
+# Use cases
+# 1. Test a single file - specify: schema_type, file_type, file_path
+# 2. Test a release - specify schema_type, directory_path
+# 3. Run this script using the provided test files for a file_type
+# 4. Run this script using the provided test files for a schema type 
+# Note: 3 and 4 also function to test this script
+
+# script params
+# test_type = 'file' or 'release' or 'script-file' or 'script-release' 
+# schema_type = 'pathways' or 'flex'
+# schema_version = version of schema to be tested against
+# file_type = 'pathways.txt', 'levels.txt', etc. (for file and script-file only)
+# path = path to file for file, path to directory for release, ignored for script-* tests
+
+# set the params here until I learn how to add params to a python function
+test_type = 'script-file'
+schema_type = 'pathways'
+schema_version = 'v1.0'
+file_type = 'pathways.txt'
+path = '' # not used for script tests - path is inferred from schema and file types
 
 # set up sqlite connection
 # create a temp db in RAM
@@ -52,12 +52,15 @@ version = 'v1.0' # schema version being tested
 con = sql.connect(':memory:') 
 cur = con.cursor()
 
-schema_table = data_schema + "_" + version
-sup.create_schema_table(schema_table, con)
+# strip .txt off of file type
+short_file_type = re.sub('.txt', '', file_type)
 
-tests.test_script(data_schema, version, schema_table, con)
+if(test_type == 'script-file'):
+    gcvtests.test_script_file(schema_type, schema_version, short_file_type, con)
+else:
+    print("not supported yet")
 
-print("DONE")
+print("ALL DONE")
 con.close()
 
 
