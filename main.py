@@ -18,10 +18,11 @@
 # e.g. a table named pathways_schema will capture the gtfs requirements for a
 # pathways.txt file
 
+import os as os
+import re as re
 from distutils.log import ERROR
 import sqlite3 as sql
 import pandas as pd
-import os as os
 
 # things that should be params
 data_schema = 'pathways'
@@ -38,7 +39,6 @@ version = 'v1.0'
 def csv_to_table(file_name, table_name, con):
     # skipinitialspace skips spaces after (comma) delimiters
     # lines that start with # (commented lines) will be ignored 
-    print("csv_to_table " + file_name)
     df = pd.read_csv(file_name, skipinitialspace='True', comment="#")
     
     # tablename is first argument, returns number of rows
@@ -76,29 +76,45 @@ create_schema_table(schema_name, con)
 dir_name = 'test_files/' + data_schema + '/' + version
 file_list = os.listdir(path = dir_name)
 for file_name in file_list:
-    print("Running test on " + file_name)
+    print("Running test on file: " + file_name)
     # check to see if success or fail in file name
-    expect_success = True # if success in file name 
-    expect_success = False # if fail in file name
-    # check that one and only one of success / fail are in file name
-
+    expect_success = True # assume we expect success
+    if(re.search('Fail', file_name, re.IGNORECASE) != None):
+        expect_success = False # if Fail, fail, or FAIL in file name
+    
     # load pathways, flex file into table...
     csv_to_table(dir_name + "/" + file_name, file_name, con)
 
     # catch error - some expected passes, some expected fails
-    #try:
-    cur.execute("insert into '" + schema_name + 
-        "' select * from '" + file_name + "'")
-    #        break
-    #except # ERROR
-        # check if 
+    try:
+        cur.execute("insert into '" + schema_name + 
+            "' select * from '" + file_name + "'")
+    except sql.IntegrityError as err:
+        if(expect_success == False):
+            print("Success: Test on " + file_name + " failed as expected.")
+            print(os.linesep)
+        else:
+            print("FAIL: Test on " + file_name + " failed, expected to succeed.")
+            print(err)
+            print(os.linesep)
+    else:
+        if(expect_success == True):
+            print("Success: Test on " + file_name + "succeeded as expected")
+            print(os.linesep)
+        else:
+            print("FAIL: Test on " + file_name + " succeeded, expected to fail.")
+            print(os.linesep)
 
+    
 
     # when all tests are done, drop tuples from the table
     cur.execute("delete from '" + schema_name + "'")
 
+  
 #    for row in cur.execute("SELECT * FROM '" + schema_name + "'"):
 #        print(row)
+
+print("DONE")
 
 
 con.close()
