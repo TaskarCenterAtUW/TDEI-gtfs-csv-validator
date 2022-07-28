@@ -1,7 +1,0 @@
-# this is a comment
-# gtfs files must have header rows
-# don't think gtfs files support comments, but our validator does
-# seems csvs are consistent with excel csvs
-a, b, c
-1, 2, "text"
-4, 5, "text ""with"" quotes"
