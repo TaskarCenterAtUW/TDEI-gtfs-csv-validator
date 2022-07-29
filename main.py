@@ -14,10 +14,14 @@
 
 # TODOS: 
 # need to verify IDs are UTF-8 characters?
-# need to add support if pathways data files don't contain all fields
+# rules failes have an issue with the 'fail' in name - if
+# 'fail' in name - not clear which test should fail, need
+# a better mechanism for understanding which tests should
+# fail and which should succeed 
+
+# new rules needed:
 # pathways rules are graph traversals - need to add checks for those
 # fks to be enforced with rules or somesuch
-# rules fails have an issue with the 'fail' in name
 
 import re as re
 import sqlite3 as sql

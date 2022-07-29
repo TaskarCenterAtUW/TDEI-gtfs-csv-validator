@@ -5,6 +5,7 @@ import os as os
 import gcv_support as gcvsup
 
 def test_script_file(schema_type, schema_version, file_type, con):
+    print("TEST: Running script test")
 
     schema_table = file_type + "_" + schema_version
     gcvsup.create_schema_table(schema_table, con)
@@ -14,10 +15,12 @@ def test_script_file(schema_type, schema_version, file_type, con):
     file_list = os.listdir(path = dir_name)
 
     for file_name in file_list:
+        print("TEST: Testing file " + file_name)
         # check schema
         # loads file_name into schema_table checks for errors
         gcvsup.check_schema(dir_name, file_name, schema_table, con)
         gcvsup.check_rules(schema_table, file_name, con)
+        print("") # add space after testing for file is done
 
     # when all tests are done, drop tuples from the table
     cur = con.cursor()

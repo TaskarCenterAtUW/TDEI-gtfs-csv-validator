@@ -40,7 +40,7 @@ def create_schema_table(schema_name, con):
     cur.execute(create_table)
 
 def check_schema(dir_name, file_name, schema_table, con):
-    print("Checking schema: " + file_name)
+    print("TEST: Checking schema: ")
     # check to see if success or fail in file name
     expect_success = True # assume we expect success
     if(re.search('Fail', file_name, re.IGNORECASE) != None):
@@ -50,26 +50,59 @@ def check_schema(dir_name, file_name, schema_table, con):
     csv_to_table(dir_name + "/" + file_name, file_name, con)
 
     cur = con.cursor()
+
+    # figure out which attributes exist in the csv file
+    # and create the appropriate insert command
+    # get list of col names from schema_table
+    # get list of col names from file_name (table)
+    # one optoin - PRAGMA table_info(foo)
+    # schema table is strange  
+    schema_table_info = cur.execute("PRAGMA table_info('" + schema_table + "')").fetchall()
+    file_name_info = cur.execute("PRAGMA table_info('" + file_name + "')").fetchall()
+
+    # table_info returns lists of tuples - each row in that list 
+    # represents one attr, I want the attr name, which is col 1
+    schema_table_attrs = [tuple[1] for tuple in schema_table_info]
+    file_name_attrs = [tuple[1] for tuple in file_name_info]
+
+    query = "insert into '" + schema_table + "' select "
+    first_attr = True
+    for attr in schema_table_attrs:
+        if(first_attr == True):
+            first_attr = False
+        else:
+            query += ", "
+        if(attr in file_name_attrs):
+            query += attr
+        else:
+            query += '1'
+        
+
+    # add end of query
+    query += " from '" + file_name + "'"
+
+    # print(query)
+
     # catch error - some expected passes, some expected fails
     try:
-        cur.execute("insert into '" + schema_table + 
-            "' select * from '" + file_name + "'")
+        cur.execute(query)
+        #cur.execute("insert into '" + schema_table + 
+        #    "' select * from '" + file_name + "'")
     except sql.IntegrityError as err:
         if(expect_success == False):
-            print("Success: Test on " + file_name + " failed as expected.")
+            print("\tSuccess: Schema check failed as expected.")
         else:
-            print("FAIL: Test on " + file_name + " failed, expected to succeed.")
-            print(err)
+            print("\tFAIL: Schema check failed, expected to succeed.")
+            print("\t\t", err)
     else:
         if(expect_success == True):
-            print("Success: Test on " + file_name + " succeeded as expected")
+            print("\tSuccess: Schema check succeeded as expected")
         else:
-            print("FAIL: Test on " + file_name + " succeeded, expected to fail.")
-
+            print("\tFAIL: Schema check succeeded, expected to fail.")
 
 
 def check_rules(schema_name, file_name, con):
-    print("Checking rules on: " + file_name)
+    print("TEST: Checking rules on: " + file_name)
     df = pd.read_csv('rules/' + schema_name + "_rules", skipinitialspace='True', 
         comment='#')
     cur = con.cursor()
@@ -79,7 +112,7 @@ def check_rules(schema_name, file_name, con):
         rule_name = row[1]
         fail_msg = row[2]
         rule_sql = row[3]    
-        print("Checking rule: " + rule_name)
+        print("\tChecking rule: " + rule_name)
         
         # use regex sub to replace TABLE with tablename
         sql_file_name = "'" + file_name + "'"
@@ -87,11 +120,10 @@ def check_rules(schema_name, file_name, con):
         # print(rule_sql)
         cur.execute(rule_sql) 
         row = cur.fetchone()
-        print(row)
         if row is not None:
-            print("FAIL:" + rule_name + " failed " + fail_msg)
+            print("\t\tFAIL:" + rule_name + " failed " + fail_msg)
         else:
-            print("Success: " + rule_name + " succeeded")
+            print("\t\tSuccess: " + rule_name + " succeeded")
 
 
 
