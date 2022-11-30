@@ -1,0 +1,5 @@
+# this is a pathways file that is expected to pass
+# the file is missing some optional attributes
+# purpose is to validate that files missing optional attributes signposted_as and reversed_signposted_as passes the test
+pathway_id, from_stop_id, to_stop_id, pathway_mode, is_bidirectional, length, traversal_time, stair_count, max_slope, min_width
+"path1", "stop1", "stop2", 1, 0, 23.1, 4, 5, 23.5, 35.5

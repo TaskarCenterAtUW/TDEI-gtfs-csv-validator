@@ -1,0 +1,7 @@
+# if sql query returns >0 results, fail_msg will be printed 
+rule_name, fail_msg, rule_sql
+no self paths, found a path where from_stop_id is same as to_stop_id, SELECT * from stops where from_stop_id = to_stop_id
+lat cond req, stop_lat is required for loctions which are stops (location_type = 0), SELECT * from stops where location_type = 0 AND stop_lat is NULL
+lat cond req, stop_lat is required for loctions which are stations (location_type = 1), SELECT * from stops where location_type = 1 AND stop_lat is NULL
+lat cond req, stop_lat is required for loctions which are entrances/exits (location_type = 2), SELECT * from stops where location_type = 2 AND stop_lat is NULL
+stop_id fk, stop_id found that is not in the stops file, SELECT * FROM pathways where pathways.stop_id NOT IN (select stop_id from stops) 

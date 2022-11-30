@@ -1,0 +1,5 @@
+# this is a levels file that is expected to fail the schema test
+# this is a levels file that is expected to fail the schema test
+# required attribute level_id is missing
+level_index, level_name
+1, test

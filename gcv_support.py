@@ -26,28 +26,52 @@ def csv_to_table(file_name, table_name, con):
 # flex or osw, version is the version number
 # this function will read the file schema_version_schema.csv
 # to get the schema definition
-def create_schema_table(schema_name, con):
-    #print("create_schema_table")
-    df = pd.read_csv('schemas/' + schema_name + "_schema.csv", skipinitialspace='True', 
-        comment='#')
-    create_table = "CREATE TABLE '" + schema_name + "'("  
-    for row in df.itertuples(index=True, name=None):
-        if row[0] != 0:
-            create_table += ", "
-        create_table += row[1] + " " + row[4]
-    create_table += ") strict;"
-    cur = con.cursor()
-    cur.execute(create_table)
+def create_schema_tables(data_type, schema_version, con):
+    print("begin create_schema_tables")
 
-def check_schema(dir_name, file_name, schema_table, con):
+    dir_path = 'schemas/' + data_type + "/" + schema_version + "/"
+    if(data_type == 'gtfs_pathways'):
+        file_names = ["levels_schema", "pathways_schema", "stops_schema"]
+        for file_name in file_names:
+            print("reading file " + dir_path + file_name + ".csv")
+            df = pd.read_csv(dir_path + file_name + ".csv", skipinitialspace='True', comment='#')
+            create_table = "CREATE TABLE '" + file_name + "'("  
+            for row in df.itertuples(index=True, name=None):
+                if row[0] != 0:
+                    create_table += ", "
+                create_table += row[1] + " " + row[4]
+            create_table += ") strict;"
+            try:
+                cur = con.cursor()
+                cur.execute(create_table)
+            except Exception as excep:
+                print(excep)
+
+    else:
+        print("gtfs_flex not supported yet")
+    
+    print("end create_schema_tables")
+
+
+# this function takes the name of the test and the file name and
+# checks to see if the file is expected to fail or pass this test
+# returns yes if success is expected, no if file is expected to fail
+# the test
+def check_expect_success(test_name, file_name):
+    # expect fail if we have Fail, fail or FAIL and the test name in the file name
+    if(re.search('Fail', file_name, re.IGNORECASE) != None and 
+        re.search(test_name, file_name) != None):
+            return False; # if Fail, fail, or FAIL in file name
+    return True;
+
+
+def check_schema(file_path, schema_table, file_table, con):
     print("TEST: Checking schema: ")
     # check to see if success or fail in file name
-    expect_success = True # assume we expect success
-    if(re.search('Fail', file_name, re.IGNORECASE) != None):
-        expect_success = False # if Fail, fail, or FAIL in file name
-    
+    expect_success = check_expect_success('schema', file_path)
+
     # load pathways, flex file into table...
-    csv_to_table(dir_name + "/" + file_name, file_name, con)
+    csv_to_table(file_path, file_table, con)
 
     cur = con.cursor()
 
@@ -58,7 +82,7 @@ def check_schema(dir_name, file_name, schema_table, con):
     # one optoin - PRAGMA table_info(foo)
     # schema table is strange  
     schema_table_info = cur.execute("PRAGMA table_info('" + schema_table + "')").fetchall()
-    file_name_info = cur.execute("PRAGMA table_info('" + file_name + "')").fetchall()
+    file_name_info = cur.execute("PRAGMA table_info('" + file_table + "')").fetchall()
 
     # table_info returns lists of tuples - each row in that list 
     # represents one attr, I want the attr name, which is col 1
@@ -79,15 +103,14 @@ def check_schema(dir_name, file_name, schema_table, con):
         
 
     # add end of query
-    query += " from '" + file_name + "'"
+    query += " from " + file_table 
 
-    # print(query)
+    print(query)
 
     # catch error - some expected passes, some expected fails
     try:
         cur.execute(query)
-        #cur.execute("insert into '" + schema_table + 
-        #    "' select * from '" + file_name + "'")
+
     except sql.IntegrityError as err:
         if(expect_success == False):
             print("\tSuccess: Schema check failed as expected.")
@@ -114,10 +137,7 @@ def check_rules(schema_name, file_name, con):
         rule_sql = row[3]    
         print("\tChecking rule: " + rule_name)
         
-        # use regex sub to replace TABLE with tablename
-        sql_file_name = "'" + file_name + "'"
-        rule_sql = re.sub('TABLE', sql_file_name, rule_sql)    
-        # print(rule_sql)
+        print(rule_sql)
         cur.execute(rule_sql) 
         row = cur.fetchone()
         if row is not None:

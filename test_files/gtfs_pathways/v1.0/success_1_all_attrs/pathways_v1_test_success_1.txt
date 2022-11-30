@@ -1,0 +1,4 @@
+# this is a pathways file that is expected to pass
+# this file has all possible pathways attributes
+pathway_id, from_stop_id, to_stop_id, pathway_mode, is_bidirectional, length, traversal_time, stair_count, max_slope, min_width, signposted_as, reversed_signposted_as
+"path1", "stop1", "stop2", 1, 0, 23.1, 4, 5, 23.5, 35.5, "signposted", "reverse signposted"

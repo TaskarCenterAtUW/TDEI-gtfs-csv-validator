@@ -1,0 +1,4 @@
+# this is levels file that includes all required attributes, missing optiona level name
+# is expected to pass
+level_id, level_index
+"level1", 1

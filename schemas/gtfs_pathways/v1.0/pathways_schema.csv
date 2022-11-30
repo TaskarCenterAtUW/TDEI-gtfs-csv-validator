@@ -1,10 +1,10 @@
-# this file documents the pathways file schema
+# this file documents the pathways.txt of file schema of the gtfs_pathways v1 spec
 # this file is used as input to the gtfs_csv_validator
 # FieldName, Type, Required (from GTFS spec)
 FieldName, Type, Required, sqliteType
-pathway_id, "Unique ID", Required, "text not null unique"
-from_stop_id, "Foreign ID", Required, "text not null"
-to_stop_id, "Foreign ID", Required, "text not null"
+pathway_id, ID, Required, "text not null unique"
+from_stop_id, ID, Required, "text not null"
+to_stop_id, ID, Required, "text not null"
 pathway_mode, Enum, Required, "int not null check(pathway_mode IN (1,2,3,4,5,6,7))" 
 is_bidirectional, Enum, Required, "int not null check(is_bidirectional IN(0,1))"
 length, Non-negative Float, Optional, "real check(length>=0)"
@@ -15,8 +15,6 @@ min_width, Positive Float, Optional, "real check(min_width > 0)"
 signposted_as, Text, Optional, "text"
 reversed_signposted_as, Text, Optional, "text"
 
-# need to think about how to capture this schema in an editable and usable way
-# need to map GTFS types to sql types - want that mapping in one place
 
 # rules beyond typing rules will be defined as sql queries
 # from_stop_id is a fk to stops.stop_id

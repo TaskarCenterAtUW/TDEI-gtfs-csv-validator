@@ -13,11 +13,10 @@
 # data from those tables into the schema table - checks for schema issues
 
 # TODOS: 
+# set up flex validation schemas
+# test a real pathways file 
+
 # need to verify IDs are UTF-8 characters?
-# rules failes have an issue with the 'fail' in name - if
-# 'fail' in name - not clear which test should fail, need
-# a better mechanism for understanding which tests should
-# fail and which should succeed 
 
 # new rules needed:
 # pathways rules are graph traversals - need to add checks for those
@@ -44,11 +43,9 @@ import gcv_testfcns as gcvtests
 # path = path to file for file, path to directory for release, ignored for script-* tests
 
 # set the params here until I learn how to add params to a python function
-test_type = 'script-file'
-schema_type = 'pathways'
+data_type = 'gtfs_pathways'
 schema_version = 'v1.0'
-file_type = 'pathways.txt'
-path = '' # not used for script tests - path is inferred from schema and file types
+dir_path = 'test_files/gtfs_pathways/v1.0/success_1_all_attrs' 
 
 # set up sqlite connection
 # create a temp db in RAM
@@ -56,13 +53,8 @@ path = '' # not used for script tests - path is inferred from schema and file ty
 con = sql.connect(':memory:') 
 cur = con.cursor()
 
-# strip .txt off of file type
-short_file_type = re.sub('.txt', '', file_type)
-
-if(test_type == 'script-file'):
-    gcvtests.test_script_file(schema_type, schema_version, short_file_type, con)
-else:
-    print("not supported yet")
+print("Calling run_tests")
+gcvtests.run_tests(data_type, schema_version, dir_path, con)
 
 print("ALL DONE")
 con.close()
