@@ -106,9 +106,6 @@ def check_schema(file_path, schema_table, file_table, con):
         else:
             query += "NULL"
 
-    # stair_count, Non-null Integer, Optional, "int not null"
-    # is causing issues...
-
     # add end of query
     query += " from " + file_table 
 
@@ -162,6 +159,7 @@ def check_rules(data_type, schema_version, con):
         print(rule_sql)
         cur.execute(rule_sql) 
         row = cur.fetchone()
+        print(row)
         if row is not None:
             print("\t\tFAIL:" + rule_name + " failed " + fail_msg)
             raise RuntimeError("test " + rule_name + "failed")

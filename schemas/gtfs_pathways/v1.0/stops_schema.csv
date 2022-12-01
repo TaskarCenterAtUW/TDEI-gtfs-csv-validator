@@ -8,7 +8,7 @@ stop_name, Text, Optional, "text"
 stop_desc, Text, Optional, "text"
 stop_lat, Latitude, Optional, "real check(stop_lat >= -90 AND stop_lat <=90)"
 stop_lon, Longitude, Optional, "real check(stop_lat >= -180 AND stop_lat <=180)"
-zone_id, ID, Optional, "text not null"
+zone_id, ID, Optional, "text"
 stop_url, URL, Optional, "text"
 location_type, Enum, Optional, "int check(location_type IN (0,1,2,3,4))"
 parent_station, ID, Optional, "text"
@@ -17,6 +17,7 @@ wheelchair_boarding, Enum, Optional, "int check(wheelchair_boarding IN (0,1,2))"
 level_id, ID, Optional, "text"
 platform_code, Text, Optional, "text"
 
+# TODO - zone_id is not null text, but optional, left as text
 
 # stop_name is conditionally required, put that check in rules
 # required for locations which are tuype 0, 1, 2 optional for 3, 4

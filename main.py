@@ -60,7 +60,8 @@ cur = con.cursor()
 #test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs']
 #test_dirs = ['test_files/gtfs_pathways/v1.0/success_2_missing_attrs']
 #test_dirs = ['test_files/gtfs_pathways/v1.0/fail_schema_1']
-test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920_small']
+#test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920_small']
+test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920']
 
 for dir_path in test_dirs:  
     print("Calling run_tests on " + dir_path)

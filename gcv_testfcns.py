@@ -56,7 +56,7 @@ def run_tests(data_type, schema_version, dir_path, con):
         raise RuntimeError("rules check failed, see trace messages")
 
     # for now print out the tables...
-    gcvsup.print_schema_tables(data_type, con)
+    #gcvsup.print_schema_tables(data_type, con)
     gcvsup.drop_all_tables(data_type, con)
 
 

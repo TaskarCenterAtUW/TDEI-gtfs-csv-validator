@@ -9,12 +9,13 @@ pathway_mode, Enum, Required, "int not null check(pathway_mode IN (1,2,3,4,5,6,7
 is_bidirectional, Enum, Required, "int not null check(is_bidirectional IN(0,1))"
 length, Non-negative Float, Optional, "real check(length>=0)"
 traversal_time, Positive Integer, Optional, "int check(traversal_time > 0)"
-stair_count, Non-null Integer, Optional, "int not null"
+stair_count, Non-null Integer, Optional, "int"
 max_slope, Float, Optional, "real"
 min_width, Positive Float, Optional, "real check(min_width > 0)"
 signposted_as, Text, Optional, "text"
 reversed_signposted_as, Text, Optional, "text"
 
+# TODO - stair count is specified as a non null integer, but is optional, left as int
 
 # rules beyond typing rules will be defined as sql queries
 # from_stop_id is a fk to stops.stop_id
