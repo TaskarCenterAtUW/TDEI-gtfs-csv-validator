@@ -1,0 +1,13 @@
+stop_id,stop_code,stop_name,stop_desc,platform_code,platform_name,stop_lat,stop_lon,zone_id,stop_address,stop_url,level_id,location_type,parent_station,wheelchair_boarding,municipality,on_street,at_street,vehicle_type
+node-516-platform,,Harvard,Harvard - Bottom of escalator from Alewife platform to Church Street lobby,,,,,,,,level_-1_alewife_platform,3,place-harsq,1,Cambridge,,,
+node-harsq-harstair-platform,,Harvard,Harvard - Bottom of stairs between Alewife platform and Church Street lobby,,,,,,,,level_-1_alewife_platform,3,place-harsq,1,Cambridge,,,
+node-harsq-nbramp-platform,,Harvard,Harvard - Ramp between Alewife platform and fare gates,,,,,,,,level_-1_alewife_platform,3,place-harsq,1,Cambridge,,,
+node-harsq-sbstair-nb,,Harvard,Harvard - Top of stairs between Red Line platforms,,,,,,,,level_-1_alewife_platform,3,place-harsq,1,Cambridge,,,
+70066,70066,Porter,Porter - Red Line - Alewife,,Alewife,42.388400,-71.119149,RapidTransit,,https://www.mbta.com/stops/place-portr,level_-4_alewife_platform,0,place-portr,1,Cambridge,,,1
+node-506-nbplatform,,Porter,Porter - Bottom of escalator from Alewife platform to Ashmont/Braintree platform,,,42.388693,-71.119035,,,,level_-4_alewife_platform,3,place-portr,1,Cambridge,,,
+node-507-nbplatform,,Porter,Porter - Bottom of escalator from Alewife platform to Ashmont/Braintree platform,,,42.388941,-71.119037,,,,level_-4_alewife_platform,3,place-portr,1,Cambridge,,,
+node-983-nbplatform,,Porter,"Porter - Alewife platform level of Red Line, lobby elevator",,,42.388524,-71.119062,,,,level_-4_alewife_platform,3,place-portr,1,Cambridge,,,
+node-987-nbplatform,,Porter,"Porter - Alewife platform level of Red Line, lobby elevator",,,42.388489,-71.119066,,,,level_-4_alewife_platform,3,place-portr,1,Cambridge,,,
+node-portr-506stairs-nbplatform,,Porter,Porter - Bottom of stairs between Alewife platform and Ashmont/Braintree platform,,,42.388712,-71.119054,,,,level_-4_alewife_platform,3,place-portr,1,Cambridge,,,
+node-portr-507stairs-nbplatform,,Porter,Porter - Bottom of stairs between Alewife platform and Ashmont/Braintree platform,,,42.388922,-71.119018,,,,level_-4_alewife_platform,3,place-portr,1,Cambridge,,,
+70068,70068,Harvard,Harvard - Red Line - Alewife,,Alewife,42.373362,-71.118956,RapidTransit,,https://www.mbta.com/stops/place-harsq,level_-1_alewife_platform,0,place-harsq,1,Cambridge,,,1

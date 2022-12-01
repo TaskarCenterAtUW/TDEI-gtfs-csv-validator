@@ -45,7 +45,7 @@ import gcv_testfcns as gcvtests
 # set the params here until I learn how to add params to a python function
 data_type = 'gtfs_pathways'
 schema_version = 'v1.0'
-dir_path = 'test_files/gtfs_pathways/v1.0/success_1_all_attrs' 
+
 
 # set up sqlite connection
 # create a temp db in RAM
@@ -53,10 +53,24 @@ dir_path = 'test_files/gtfs_pathways/v1.0/success_1_all_attrs'
 con = sql.connect(':memory:') 
 cur = con.cursor()
 
-print("Calling run_tests")
-gcvtests.run_tests(data_type, schema_version, dir_path, con)
+#test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs',
+#             'test_files/gtfs_pathways/v1.0/success_2_missing_attrs',
+#             'test_files/gtfs_pathways/v1.0/fail_schema_1']
 
-print("ALL DONE")
+#test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs']
+#test_dirs = ['test_files/gtfs_pathways/v1.0/success_2_missing_attrs']
+#test_dirs = ['test_files/gtfs_pathways/v1.0/fail_schema_1']
+test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920_small']
+
+for dir_path in test_dirs:  
+    print("Calling run_tests on " + dir_path)
+    try:
+        gcvtests.run_tests(data_type, schema_version, dir_path, con)
+    except:
+        print("TEST FAILED - see trace messages")
+    else:
+        print("TEST SUCCEEDED - ALL DONE")
+
 con.close()
 
 

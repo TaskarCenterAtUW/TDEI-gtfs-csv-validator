@@ -1,0 +1,6 @@
+pathway_id,from_stop_id,to_stop_id,facility_id,pathway_mode,is_bidirectional,length,wheelchair_length,traversal_time,wheelchair_traversal_time,stair_count,max_slope,pathway_name,pathway_code,signposted_as,instructions
+harsq-120,70068,node-516-platform,,1,0,18.4404000,18.4404000,,,,,Red Line (Alewife) to Bottom of escalator from Alewife platform to Church Street lobby,,Church Street escalator,
+harsq-129,node-516-platform,70068,,1,0,7.0104000,7.0104000,,,,,Bottom of escalator from Alewife platform to Church Street lobby to Red Line (Alewife),,Red Line - Alewife,
+harsq-133,node-harsq-sbstair-nb,node-516-platform,,1,0,24.9936000,24.9936000,,,,,Top of stairs between Red Line platforms to Bottom of escalator from Alewife platform to Church Street lobby,,Church Street escalator,
+arsq-137,node-516-platform,node-harsq-sbstair-nb,,1,0,24.9936000,24.9936000,,,,,Bottom of escalator from Alewife platform to Church Street lobby to Top of stairs between Red Line platforms,,Red Line - Ashmont/Braintree,
+harsq-140,node-516-platform,node-516-lobby,516,4,0,,,19,,,,Bottom of escalator from Alewife platform to Church Street lobby to Top of escalator from Alewife platform to Church Street lobby,516,,

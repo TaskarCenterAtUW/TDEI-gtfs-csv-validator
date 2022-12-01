@@ -27,30 +27,34 @@ def csv_to_table(file_name, table_name, con):
 # this function will read the file schema_version_schema.csv
 # to get the schema definition
 def create_schema_tables(data_type, schema_version, con):
-    print("begin create_schema_tables")
+    #print("begin create_schema_tables")
 
     dir_path = 'schemas/' + data_type + "/" + schema_version + "/"
     if(data_type == 'gtfs_pathways'):
-        file_names = ["levels_schema", "pathways_schema", "stops_schema"]
-        for file_name in file_names:
-            print("reading file " + dir_path + file_name + ".csv")
-            df = pd.read_csv(dir_path + file_name + ".csv", skipinitialspace='True', comment='#')
-            create_table = "CREATE TABLE '" + file_name + "'("  
+        table_names = ["levels", "pathways", "stops"]
+        for table_name in table_names:
+            file_path = dir_path + table_name + "_schema.csv"
+            #print("reading file " + file_path) 
+            df = pd.read_csv(file_path, skipinitialspace='True', comment='#')
+            create_table = "CREATE TABLE '" + table_name + "'("  
             for row in df.itertuples(index=True, name=None):
                 if row[0] != 0:
                     create_table += ", "
                 create_table += row[1] + " " + row[4]
             create_table += ") strict;"
+            #print("query: " + create_table)
             try:
                 cur = con.cursor()
                 cur.execute(create_table)
             except Exception as excep:
                 print(excep)
+                raise excep
+            #print("schema table " + table_name + " created")
 
     else:
-        print("gtfs_flex not supported yet")
+        raise RuntimeError("gtfs_flex not supported yet")
     
-    print("end create_schema_tables")
+    print("schema_tables created")
 
 
 # this function takes the name of the test and the file name and
@@ -95,12 +99,15 @@ def check_schema(file_path, schema_table, file_table, con):
         if(first_attr == True):
             first_attr = False
         else:
-            query += ", "
-        if(attr in file_name_attrs):
-            query += attr
-        else:
-            query += '1'
+            query += ', '
         
+        if(attr in file_name_attrs):  
+            query += attr 
+        else:
+            query += "NULL"
+
+    # stair_count, Non-null Integer, Optional, "int not null"
+    # is causing issues...
 
     # add end of query
     query += " from " + file_table 
@@ -108,25 +115,40 @@ def check_schema(file_path, schema_table, file_table, con):
     print(query)
 
     # catch error - some expected passes, some expected fails
+    fail = False
     try:
         cur.execute(query)
-
     except sql.IntegrityError as err:
         if(expect_success == False):
             print("\tSuccess: Schema check failed as expected.")
         else:
             print("\tFAIL: Schema check failed, expected to succeed.")
             print("\t\t", err)
+        fail = True
+    except sql.OperationalError as err:
+        if(expect_success == False):
+            print("\tSuccess: Schema check failed as expected.")
+        else:
+            print("\tFAIL: Schema check failed, expected to succeed.")
+            print("\t\t", err)
+            fail = True
+    except Exception as err:
+        print(f"unexpected {err=}, {type(err)=}") 
     else:
         if(expect_success == True):
             print("\tSuccess: Schema check succeeded as expected")
         else:
             print("\tFAIL: Schema check succeeded, expected to fail.")
+            fail = True
+    
+    if(fail == True):
+        raise RuntimeError("schema check failed, see trace messages")
 
 
-def check_rules(schema_name, file_name, con):
-    print("TEST: Checking rules on: " + file_name)
-    df = pd.read_csv('rules/' + schema_name + "_rules", skipinitialspace='True', 
+def check_rules(data_type, schema_version, con):
+    print("TEST: begin check rules") 
+    rules_file = 'rules/' + data_type + "_" + schema_version + "_rules.csv"
+    df = pd.read_csv(rules_file, skipinitialspace='True', 
         comment='#')
     cur = con.cursor()
 
@@ -142,8 +164,26 @@ def check_rules(schema_name, file_name, con):
         row = cur.fetchone()
         if row is not None:
             print("\t\tFAIL:" + rule_name + " failed " + fail_msg)
+            raise RuntimeError("test " + rule_name + "failed")
         else:
             print("\t\tSuccess: " + rule_name + " succeeded")
 
+def print_schema_tables(data_type, con):
+    cur = con.cursor()
+    if(data_type == 'gtfs_pathways'):
+        table_names = ["levels", "pathways", "stops"]
+        for table_name in table_names:
+            cur.execute("Select * from " + table_name)
+            print(cur.fetchall())
+    else:
+        print("flex not implemented yet")
 
+def drop_all_tables(data_type, con):
+    cur = con.cursor()
+    if(data_type == 'gtfs_pathways'):
+        table_names = ["levels", "pathways", "stops", "levels_file", "pathways_file", "stops_file"]
+        for table_name in table_names:
+            cur.execute("drop table " + table_name)
+    else:
+        print("flex not implemented yet")
 
