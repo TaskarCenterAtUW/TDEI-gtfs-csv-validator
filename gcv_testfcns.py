@@ -6,10 +6,13 @@ import re as re
 import gcv_support as gcvsup
 
 def run_tests(data_type, schema_version, dir_path, con):
-    #print("TEST: begin run_tests")
+    print("TEST: begin run_tests")
 
     # create all tables for this particular data_type
     gcvsup.create_schema_tables(data_type, schema_version, con)
+    
+    print("TEST: schema tables created")
+
 
     # read all files from directory test_files/data_schema/version
     file_list = os.listdir(path = dir_path)
@@ -32,8 +35,18 @@ def run_tests(data_type, schema_version, dir_path, con):
             elif(re.search('stops', file_name, re.IGNORECASE) != None):  
                 schema_table = 'stops'
                 file_table = 'stops_file'
-            else:
-                raise AssertionError('file name expected to contain levels, pathways or stops for gtfs_pathways')
+        elif(data_type == 'gtfs_flex'):
+            if(re.search('booking_rules', file_name, re.IGNORECASE) != None):  
+                schema_table = 'booking_rules'
+                file_table = 'booking_rules_file'
+            elif(re.search('location_groups', file_name, re.IGNORECASE) != None):  
+                schema_table = 'location_groups'
+                file_table = 'location_groups_file'
+            elif(re.search('stop_times', file_name, re.IGNORECASE) != None):  
+                schema_table = 'stop_times'
+                file_table = 'stops_times_file'
+        else:
+            raise AssertionError('only flex and pathways supported')
         
         # file_path, data_type, con
         file_path = dir_path + '/' + file_name

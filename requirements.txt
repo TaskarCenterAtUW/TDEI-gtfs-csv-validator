@@ -1,0 +1,4 @@
+# Python modules required are:
+# re, sqlite3
+
+# Tested with python3 Python 3.9.6
