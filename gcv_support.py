@@ -27,32 +27,38 @@ def csv_to_table(file_name, table_name, con):
 # this function will read the file schema_version_schema.csv
 # to get the schema definition
 def create_schema_tables(data_type, schema_version, con):
-    #print("begin create_schema_tables")
+    print("begin create_schema_tables")
 
     dir_path = 'schemas/' + data_type + "/" + schema_version + "/"
+    table_names = []
     if(data_type == 'gtfs_pathways'):
         table_names = ["levels", "pathways", "stops"]
-        for table_name in table_names:
-            file_path = dir_path + table_name + "_schema.csv"
-            #print("reading file " + file_path) 
-            df = pd.read_csv(file_path, skipinitialspace='True', comment='#')
-            create_table = "CREATE TABLE '" + table_name + "'("  
-            for row in df.itertuples(index=True, name=None):
-                if row[0] != 0:
-                    create_table += ", "
-                create_table += row[1] + " " + row[4]
-            create_table += ") strict;"
-            #print("query: " + create_table)
-            try:
-                cur = con.cursor()
-                cur.execute(create_table)
-            except Exception as excep:
-                print(excep)
-                raise excep
-            #print("schema table " + table_name + " created")
-
+    elif(data_type == 'gtfs_flex'):
+        table_names = ["booking_rules", "location_groups", "stop_times"]
     else:
-        raise RuntimeError("gtfs_flex not supported yet")
+        raise RuntimeError("unexpected data type")
+
+
+    for table_name in table_names:
+        file_path = dir_path + table_name + "_schema.csv"
+        print("reading file " + file_path) 
+        df = pd.read_csv(file_path, skipinitialspace='True', comment='#')
+        create_table = "CREATE TABLE '" + table_name + "'("  
+        for row in df.itertuples(index=True, name=None):
+            if row[0] != 0:
+                create_table += ", "
+            create_table += row[1] + " " + row[4]
+            #print("query" + create_table)
+        create_table += ") strict;"
+      
+        print("query: " + create_table)
+        try:
+            cur = con.cursor()
+            cur.execute(create_table)
+        except Exception as excep:
+            print(excep)
+            raise excep
+        print("schema table " + table_name + " created")
     
     print("schema_tables created")
 

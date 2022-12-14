@@ -1,0 +1,4 @@
+# if sql query returns >0 results, fail_msg will be printed 
+rule_name, fail_msg, rule_sql
+prior_notice_duration_min required for booking_type = 1, prior_notice_duration_min required for Up to same-day booking with advance notice (booking_type =1), SELECT * from booking_rules where booking_type = 1 AND prior_notice_duration_min is NULL
+prior_notice_last_day required for booking_type = 2, prior_notice_duration_min required for Up to prior day(s) booking (booking_type =2), SELECT * from booking_rules where booking_type = 2 AND prior_notice_last_day is NULL
