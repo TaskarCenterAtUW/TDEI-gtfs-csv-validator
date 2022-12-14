@@ -42,11 +42,11 @@ import gcv_testfcns as gcvtests
 #             and stop_times files
 
 # set the params here until I learn how to add params to a python function
-#data_type = 'gtfs_pathways' # or 'gtfs-flex' for flex
-#schema_version = 'v1.0' # or 'v2.0' for flex
+data_type = 'gtfs_pathways' # or 'gtfs-flex' for flex
+schema_version = 'v1.0' # or 'v2.0' for flex
 
-data_type = 'gtfs_flex'
-schema_version = 'v2.0'
+#data_type = 'gtfs_flex'
+#schema_version = 'v2.0'
 
 #test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs',
 #             'test_files/gtfs_pathways/v1.0/success_2_missing_attrs',
@@ -56,10 +56,9 @@ schema_version = 'v2.0'
 #test_dirs = ['test_files/gtfs_pathways/v1.0/success_2_missing_attrs']
 #test_dirs = ['test_files/gtfs_pathways/v1.0/fail_schema_1']
 #test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920_small']
-#test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920']
+test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920']
 
-#test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs']
-test_dirs = ['test_files/gtfs_flex/v2.0/success_1_all_attrs']
+#test_dirs = ['test_files/gtfs_flex/v2.0/success_1_all_attrs']
 
 # set up sqlite connection
 # create a temp db in RAM

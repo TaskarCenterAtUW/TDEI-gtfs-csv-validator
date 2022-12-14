@@ -1,6 +1,10 @@
 This is intended to be a framework for a gtfs file validator for TDEI project
 
-The 
+The structure is that the gtfs csv files are read into a sqlite database - the load into
+the db does some of the schema checking. The load into the db is followed by running a set of sql
+queries which do an additional set of checks.
+
+You may run this script with a set of provided test files or with your own files.
 
 To run with provided test files: 
 The script is set up to run with the mbta files - you can just execute
