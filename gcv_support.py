@@ -5,6 +5,7 @@ import re as re
 import sqlite3 as sql
 import pandas as pd
 
+
 # import a csv file into a sqlite database table
 # attribute names will be taken from the header row of the csv file 
 # this is a generic function which takes any csv file and imports that
