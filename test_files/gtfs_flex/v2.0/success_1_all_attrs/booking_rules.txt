@@ -1,3 +1,5 @@
 booking_rule_id,booking_type,prior_notice_duration_min,prior_notice_duration_max,prior_notice_start_day,prior_notice_start_time,prior_notice_last_day,prior_notice_last_time,prior_notice_service_id,message,pickup_message,drop_off_message,phone_number,info_url,booking_url
-br_32613,2,0,1,30,08:00,1,16:30,br1,"service1","pickup1","dropoff1",111-222-3333,"url1"
-br_74828,2,0,1,30,08:00,1,18:00,br2,"service2"","pickup2","dropoff2",222-333-4444,"url2"
+br_32613,2,,,30,8:00,1,16:30,br1,message1,pickup1,dropoff1,111-222-3333,url1	
+br_74828,2,,,30,8:00,1,18:00,br2,message2,pickup2,dropoff2,222-333-4444,url2	
+br_74829,1,0,1,30,8:00,,,,message3,pickup3,dropoff3,333-333-4444,url3
+br_74820,0,,,,,,,,message4,pickup4,dropofff,444-333-4444,url4

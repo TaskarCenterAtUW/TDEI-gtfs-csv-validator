@@ -13,14 +13,10 @@
 # data from those tables into the schema table - checks for schema issues
 
 # TODOS: 
-# set up flex validation schemas
-# test a real pathways file 
-
 # need to verify IDs are UTF-8 characters?
-
-# new rules needed:
-# pathways rules are graph traversals - need to add checks for those
-# fks to be enforced with rules or somesuch
+# need pathways graph traversal rules
+# flex rules with respect to first and last stops not implemented
+# need to check geojson flex file
 
 import re as re
 import sqlite3 as sql

@@ -1,3 +1,5 @@
 stop_id,stop_sequence,arrival_time,departure_time,start_pickup_drop_off_window,end_pickup_dropoff_window,pickup_type,drop_off_type,mean_duration_factor, mean_duration_offset, safe_duration_factor, safe_duration_offset, pickup_booking_rule_id, drop_off_booking_rule-id
-tn_0,0,"arr time0","dep time 0","spdw1","epdw1",1,3,1.0,1.1,4.1,4.2,"id_1","id_2" 
-tn_1,1,"arr time1","dep time 1","spdw2","epdw2",2,0,2.0,2.1,4.1,4.2,"id_3","id_4"
+tn_0,0,"arr time0","dep time 0",,,1,3,1.0,1.1,4.1,4.2,"id_1","id_2" 
+tn_1,1,,,"spdw2","epdw2",2,0,2.0,2.1,4.1,4.2,"id_3","id_4"
+tn_2,2,,,"spdw3","epdw3",1,3,1.0,1.1,4.1,4.2,"id_1","id_2" 
+tn_3,3,"arr time3","dep time 3",,,2,0,2.0,2.1,4.1,4.2,"id_3","id_4"

@@ -172,30 +172,40 @@ def check_rules(data_type, schema_version, con):
             raise 
             
         row = cur.fetchone()
-        print("First row of result:")
-        print(row)
         if row is not None:
             print("\t\tFAIL:" + rule_name + " failed " + fail_msg)
+            print("Failing row:")
+            print(row)
             raise RuntimeError("test " + rule_name + "failed")
         else:
             print("\t\tSuccess: " + rule_name + " succeeded")
 
 def print_schema_tables(data_type, con):
     cur = con.cursor()
+    table_names = []
     if(data_type == 'gtfs_pathways'):
         table_names = ["levels", "pathways", "stops"]
-        for table_name in table_names:
-            cur.execute("Select * from " + table_name)
-            print(cur.fetchall())
+    elif(data_type == 'gtfs_flex'):
+        table_names = ["booking_rules", "location_groups", "stop_times"]
     else:
-        print("flex not implemented yet")
+        raise RuntimeError("unexpected data type")
+
+    for table_name in table_names:
+        cur.execute("Select * from " + table_name)
+        print(cur.fetchall())
+
 
 def drop_all_tables(data_type, con):
     cur = con.cursor()
+    table_names = []
     if(data_type == 'gtfs_pathways'):
         table_names = ["levels", "pathways", "stops", "levels_file", "pathways_file", "stops_file"]
-        for table_name in table_names:
-            cur.execute("drop table " + table_name)
+    elif(data_type == 'gtfs_flex'):
+        table_names = ["booking_rules", "location_groups", "stop_times"]
     else:
-        print("flex not implemented yet")
+        raise RuntimeError("unexpected data type")
+    
+    for table_name in table_names:
+        cur.execute("drop table " + table_name)
+    
 
