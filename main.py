@@ -52,11 +52,12 @@ schema_version = 'v1.0' # or 'v2.0' for flex
 #             'test_files/gtfs_pathways/v1.0/success_2_missing_attrs',
 #             'test_files/gtfs_pathways/v1.0/fail_schema_1']
 
+
 #test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs']
-#test_dirs = ['test_files/gtfs_pathways/v1.0/success_2_missing_attrs']
+test_dirs = ['test_files/gtfs_pathways/v1.0/success_2_missing_attrs']
 #test_dirs = ['test_files/gtfs_pathways/v1.0/fail_schema_1']
 #test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920_small']
-test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920']
+#test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920']
 
 #test_dirs = ['test_files/gtfs_flex/v2.0/success_1_all_attrs']
 
@@ -70,9 +71,9 @@ for dir_path in test_dirs:
     print("Calling run_tests on " + dir_path)
     try:
         gcvtests.run_tests(data_type, schema_version, dir_path, con)
-    except Exception as excep:
-        print(excep)
-        print("TEST FAILED - see trace messages")
+    except Exception as err:
+        print("TEST FAILED")
+        print(err)
     else:
         print("TEST SUCCEEDED - ALL DONE")
 

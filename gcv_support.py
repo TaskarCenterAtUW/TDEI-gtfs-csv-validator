@@ -137,6 +137,7 @@ def check_schema(file_path, schema_table, file_table, con):
             fail = True
     except Exception as err:
         print(f"unexpected {err=}, {type(err)=}") 
+        raise
     else:
         if(expect_success == True):
             print("\tSuccess: Schema check succeeded as expected")
@@ -162,9 +163,16 @@ def check_rules(data_type, schema_version, con):
         rule_sql = row[3]    
         print("\tChecking rule: " + rule_name)
         
-        print(rule_sql)
-        cur.execute(rule_sql) 
+        print("Rule sql: " + rule_sql)
+        try:
+            cur.execute(rule_sql) 
+        except Exception as err:
+            print("unexpected query execution error")
+            print(err)
+            raise 
+            
         row = cur.fetchone()
+        print("First row of result:")
         print(row)
         if row is not None:
             print("\t\tFAIL:" + rule_name + " failed " + fail_msg)

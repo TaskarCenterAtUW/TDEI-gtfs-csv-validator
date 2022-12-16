@@ -64,9 +64,9 @@ def run_tests(data_type, schema_version, dir_path, con):
     print("checking " + data_type + " rules on " + dir_path)
     try:
         gcvsup.check_rules(data_type, schema_version, con)
-    except:
+    except Exception as err:
         gcvsup.drop_all_tables(data_type, con)
-        raise RuntimeError("rules check failed, see trace messages")
+        raise
 
     # for now print out the tables...
     #gcvsup.print_schema_tables(data_type, con)

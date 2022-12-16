@@ -1,5 +1,5 @@
 # this is a stops file that contains all required attributes, but missing optional attributes level_id and platform_code and is expected to pass
 stop_id, stop_code, stop_name, stop_desc, stop_lat, stop_lon, zone_id, stop_url, location_type, parent_station, stop_timezone, wheelchair_boarding
-"station", "stn", "namestn", "descstn1", 0.1, 0.1, "zonestn", "urlstn", 1, "empty", "tzstn", 1
+"station", "stn", "namestn", "descstn1", 0.1, 0.1, "zonestn", "urlstn", 1,, "tzstn", 1
 "stop1", "stp1", "namestp1", "descstp2", 0.2, 0.2, "zonestp1", "urlstp1", 0, "station", "tzstp1"
 "stop2", "stp2", "namestp2", "descstp2", 0.3, 0.3, "zonestp2", "urlstp2", 0, "station", "tzstp2"

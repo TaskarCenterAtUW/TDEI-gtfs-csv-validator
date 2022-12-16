@@ -18,8 +18,6 @@ reversed_signposted_as, Text, Optional, "text"
 # TODO - stair count is specified as a non null integer, but is optional, left as int
 
 # rules beyond typing rules will be defined as sql queries
-# from_stop_id is a fk to stops.stop_id
-# to_stop_id is a fk to stops.stop_id
 # Pathways must be defined exhaustively in a station. 
 # If any pathways are defined, it is assumed that all pathways throughout 
 # the station are represented. Therefore, the following guidelines apply:
