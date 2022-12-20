@@ -1,34 +1,13 @@
-# gtfs-csv-validator
-# validates csv gtfs files versus a specified schema - which is either the
-# gtfs schema for that type of file or an extension of the gtfs schema for
-# that type of file
-# schema is specified as a four-column csv file (name, type, Required,sqlite_type)
+# test the gtfs-csv-validator with gtfs-pathways files
 
-# Summary
-# imports schema file into a sqlite table (e.g. pathways_schema, levels_schema, etc...)
-# the sqlite table captures many of the gtfs schema requirements for that 
-# particular gtfs table
-# reads a list of test files
-# imports those test files into sqlite tables and tries to insert
-# data from those tables into the schema table - checks for schema issues
-
-# TODOS: 
-# need to verify IDs are UTF-8 characters?
-# need pathways graph traversal rules
-# flex rules with respect to first and last stops not implemented
-# need to check geojson flex file
-
-import re as re
+from tdei_gtfs_csv_validator import gcv_testfcns as gcvtests
 import sqlite3 as sql
-import gcv_testfcns as gcvtests
-
-
 
 # Use of script: Test a release - specify data_type, schema_version
 # and a (list of) test directories 
 
 # script params
-# data_type = 'gtfs_pathways' or 'gtfs_flex'
+# data_type = 'gtfs_flex' to test flex
 # schema_version = version of schema to be tested against 
 #        use v1.0 for pathways tests or v2.0 for flex tests
 # test_dirs = a list of directories to be tested, each directory 
@@ -37,12 +16,9 @@ import gcv_testfcns as gcvtests
 #             stops files. gtfs_flex expects booking_rules, loction_groups
 #             and stop_times files
 
-# set the params here until I learn how to add params to a python function
-data_type = 'gtfs_pathways' # or 'gtfs-flex' for flex
-schema_version = 'v1.0' # or 'v2.0' for flex
-
-#data_type = 'gtfs_flex'
-#schema_version = 'v2.0'
+# set the params for the tests here 
+data_type = 'gtfs_pathways' 
+schema_version = 'v1.0' 
 
 #test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs',
 #             'test_files/gtfs_pathways/v1.0/success_2_missing_attrs',
@@ -54,8 +30,6 @@ schema_version = 'v1.0' # or 'v2.0' for flex
 #test_dirs = ['test_files/gtfs_pathways/v1.0/fail_schema_1']
 #test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920_small']
 test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920']
-
-#test_dirs = ['test_files/gtfs_flex/v2.0/success_1_all_attrs']
 
 # set up sqlite connection
 # create a temp db in RAM
