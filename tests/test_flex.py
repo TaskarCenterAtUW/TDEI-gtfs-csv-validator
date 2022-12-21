@@ -1,6 +1,11 @@
 # test the gtfs-csv-validator with gtfs-flex files
 
-import tdei_gtfs_csv_validator as tgcv
+# do not like this, but could not figure out how to make the paths work well
+# needs to be updated, but functions
+import sys
+sys.path.append(".")
+
+from tdei_gtfs_csv_validator import gcv_runtests
 import sqlite3 as sql
 
 # Use of script: Test a release - specify data_type, schema_version
@@ -20,7 +25,8 @@ import sqlite3 as sql
 data_type = 'gtfs_flex' 
 schema_version = 'v2.0' 
 
-test_dirs = ['test_files/gtfs_flex/v2.0/success_1_all_attrs']
+test_dirs = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs']
+#test_dirs = ['tests/test_files/gtfs_flex/v2.0/fail_schema_1']
 
 # set up sqlite connection
 # create a temp db in RAM
@@ -31,7 +37,7 @@ cur = con.cursor()
 for dir_path in test_dirs:  
     print("Calling run_tests on " + dir_path)
     try:
-        tgcv.run_tests(data_type, schema_version, dir_path, con)
+        gcv_runtests.run_tests(data_type, schema_version, dir_path, con)
     except Exception as err:
         print("TEST FAILED")
         print(err)

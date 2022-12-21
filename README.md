@@ -28,5 +28,16 @@ then execute main.py
 results and some logging are printed to the console
 
 ## Test the script
-This package also contains tests to test the script. There are two primary sets of tests - test_flex.py and test_pathways.py for flex and pathways respectively. Execute either of those files (without modification)
-to run those tests. 
+This package also contains tests to test the script. There are two primary sets of tests - test_flex.py and test_pathways.py for flex and pathways respectively. Execute either of those files (without modification) to run those tests. 
+
+## Adding a test release
+To add a flex or pathways release to be used to test the script, go to the appropriate directory under test_files and add a directory with the appropriate files. Then edit the test script to add that directory to the test.
+
+## Adding a test
+To add a test - for example - a new pathways or flex requirement, go rules and edit the appropriate file and add a rule name, a message to be printed when the test fails and a sql query for the test. If the sql query returns anything other than 'None' the test will be
+marked as failing.
+
+## Adding a new file type
+If you wish to add a new flex or pathways file type, go to schemas and add a file
+describing the new files. Columns used are: FieldName, Type, Required (from GTFS spec), sqliteType. FieldName, Type and Required are to be taken from the GTFS spec, the sqliteType 
+is a string that creates an attribute of the appropriate type in sqllite

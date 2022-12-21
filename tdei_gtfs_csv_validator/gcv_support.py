@@ -1,9 +1,13 @@
 # support functions for gtfs-csv-validator
 
+import sys
+sys.path.append(".")
+
 import os as os
 import re as re
 import sqlite3 as sql
 import pandas as pd
+from tdei_gtfs_csv_validator import exceptions as gcvex 
 
 # import a csv file into a sqlite database table
 # attribute names will be taken from the header row of the csv file 
@@ -146,7 +150,7 @@ def check_schema(file_path, schema_table, file_table, con):
             fail = True
     
     if(fail == True):
-        raise RuntimeError("schema check failed, see trace messages")
+        raise gcvex.TestFailed("schema check failed")
 
 
 def check_rules(data_type, schema_version, con):
@@ -176,7 +180,7 @@ def check_rules(data_type, schema_version, con):
             print("\t\tFAIL:" + rule_name + " failed " + fail_msg)
             print("Failing row:")
             print(row)
-            raise RuntimeError("test " + rule_name + "failed")
+            raise gcvex.TestFailed("test " + rule_name + "failed")
         else:
             print("\t\tSuccess: " + rule_name + " succeeded")
 
@@ -188,7 +192,7 @@ def print_schema_tables(data_type, con):
     elif(data_type == 'gtfs_flex'):
         table_names = ["booking_rules", "location_groups", "stop_times"]
     else:
-        raise RuntimeError("unexpected data type")
+        raise gcvex.UnexpectedDataType()
 
     for table_name in table_names:
         cur.execute("Select * from " + table_name)
@@ -203,7 +207,7 @@ def drop_all_tables(data_type, con):
     elif(data_type == 'gtfs_flex'):
         table_names = ["booking_rules", "location_groups", "stop_times"]
     else:
-        raise RuntimeError("unexpected data type")
+        raise gcvex.UnexpectedDataType()
     
     for table_name in table_names:
         cur.execute("drop table " + table_name)

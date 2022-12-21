@@ -1,9 +1,12 @@
 # test fncs for gtfs-csv-validator
 
+# don't like this, but couldn't figure out how to make the paths work
+import sys
+sys.path.append(".")
 
 import os as os
 import re as re
-import gcv_support as gcvsup
+from tdei_gtfs_csv_validator import gcv_support as gcvsup
 
 def run_tests(data_type, schema_version, dir_path, con):
     print("TEST: begin run_tests")

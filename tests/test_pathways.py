@@ -1,6 +1,10 @@
 # test the gtfs-csv-validator with gtfs-pathways files
 
-from tdei_gtfs_csv_validator import gcv_testfcns as gcvtests
+# don't like this, but couldn't figure out how to make the paths work
+import sys
+sys.path.append(".")
+
+from tdei_gtfs_csv_validator import gcv_runtests
 import sqlite3 as sql
 
 # Use of script: Test a release - specify data_type, schema_version
@@ -20,16 +24,16 @@ import sqlite3 as sql
 data_type = 'gtfs_pathways' 
 schema_version = 'v1.0' 
 
-#test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs',
-#             'test_files/gtfs_pathways/v1.0/success_2_missing_attrs',
-#             'test_files/gtfs_pathways/v1.0/fail_schema_1']
+#test_dirs = ['tests/test_files/gtfs_pathways/v1.0/success_1_all_attrs',
+#             'tests/test_files/gtfs_pathways/v1.0/success_2_missing_attrs',
+#             'tests/test_files/gtfs_pathways/v1.0/fail_schema_1']
 
 
-#test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs']
-#test_dirs = ['test_files/gtfs_pathways/v1.0/success_2_missing_attrs']
-#test_dirs = ['test_files/gtfs_pathways/v1.0/fail_schema_1']
-#test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920_small']
-test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920']
+#test_dirs = ['tests/test_files/gtfs_pathways/v1.0/success_1_all_attrs']
+#test_dirs = ['tests/test_files/gtfs_pathways/v1.0/success_2_missing_attrs']
+#test_dirs = ['tests/test_files/gtfs_pathways/v1.0/fail_schema_1']
+#test_dirs = ['tests/test_files/gtfs_pathways/v1.0/mbta_20220920_small']
+test_dirs = ['tests/test_files/gtfs_pathways/v1.0/mbta_20220920']
 
 # set up sqlite connection
 # create a temp db in RAM
@@ -40,7 +44,7 @@ cur = con.cursor()
 for dir_path in test_dirs:  
     print("Calling run_tests on " + dir_path)
     try:
-        gcvtests.run_tests(data_type, schema_version, dir_path, con)
+        gcv_runtests.run_tests(data_type, schema_version, dir_path, con)
     except Exception as err:
         print("TEST FAILED")
         print(err)
