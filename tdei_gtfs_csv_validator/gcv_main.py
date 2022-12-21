@@ -18,11 +18,8 @@
 # flex rules with respect to first and last stops not implemented
 # need to check geojson flex file
 
-import re as re
 import sqlite3 as sql
-import gcv_testfcns as gcvtests
-
-
+import gcv_runtests as gcvtests
 
 # Use of script: Test a release - specify data_type, schema_version
 # and a (list of) test directories 
@@ -37,43 +34,32 @@ import gcv_testfcns as gcvtests
 #             stops files. gtfs_flex expects booking_rules, loction_groups
 #             and stop_times files
 
-# set the params here until I learn how to add params to a python function
-data_type = 'gtfs_pathways' # or 'gtfs-flex' for flex
-schema_version = 'v1.0' # or 'v2.0' for flex
+def gcv_main():
+    # set the params here - provide a data_type, schema_version and path to directory
+    # with files to be validated
+    data_type = 'gtfs_pathways' # or 'gtfs-flex' for flex
+    schema_version = 'v1.0' # or 'v2.0' for flex
+    test_dirs = ['tests/test_files/gtfs_pathways/v1.0/mbta_20220920']
 
-#data_type = 'gtfs_flex'
-#schema_version = 'v2.0'
+    #test_dirs = ['test_files/gtfs_flex/v2.0/success_1_all_attrs']
 
-#test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs',
-#             'test_files/gtfs_pathways/v1.0/success_2_missing_attrs',
-#             'test_files/gtfs_pathways/v1.0/fail_schema_1']
+    # set up sqlite connection
+    # create a temp db in RAM
+    # schemas are stored in csv files for clarity and ease of maintenance
+    con = sql.connect(':memory:') 
+    cur = con.cursor()
 
+    for dir_path in test_dirs:  
+        print("Calling run_tests on " + dir_path)
+        try:
+            gcvtests.run_tests(data_type, schema_version, dir_path, con)
+        except Exception as err:
+            print("TEST FAILED")
+            print(err)
+        else:
+            print("TEST SUCCEEDED - ALL DONE")
 
-#test_dirs = ['test_files/gtfs_pathways/v1.0/success_1_all_attrs']
-#test_dirs = ['test_files/gtfs_pathways/v1.0/success_2_missing_attrs']
-#test_dirs = ['test_files/gtfs_pathways/v1.0/fail_schema_1']
-#test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920_small']
-test_dirs = ['test_files/gtfs_pathways/v1.0/mbta_20220920']
-
-#test_dirs = ['test_files/gtfs_flex/v2.0/success_1_all_attrs']
-
-# set up sqlite connection
-# create a temp db in RAM
-# schemas are stored in csv files for clarity and ease of maintenance
-con = sql.connect(':memory:') 
-cur = con.cursor()
-
-for dir_path in test_dirs:  
-    print("Calling run_tests on " + dir_path)
-    try:
-        gcvtests.run_tests(data_type, schema_version, dir_path, con)
-    except Exception as err:
-        print("TEST FAILED")
-        print(err)
-    else:
-        print("TEST SUCCEEDED - ALL DONE")
-
-con.close()
+    con.close()
 
 
 
