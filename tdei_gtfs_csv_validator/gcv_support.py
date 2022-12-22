@@ -8,6 +8,10 @@ import re as re
 import sqlite3 as sql
 import pandas as pd
 from tdei_gtfs_csv_validator import exceptions as gcvex 
+from jsonschema import validate as jsvalidate
+import json
+
+# Uses: https://github.com/python-jsonschema/jsonschema
 
 # import a csv file into a sqlite database table
 # attribute names will be taken from the header row of the csv file 
@@ -45,17 +49,16 @@ def create_schema_tables(data_type, schema_version, con):
 
     for table_name in table_names:
         file_path = dir_path + table_name + "_schema.csv"
-        print("reading file " + file_path) 
+        #print("reading file " + file_path) 
         df = pd.read_csv(file_path, skipinitialspace='True', comment='#')
         create_table = "CREATE TABLE '" + table_name + "'("  
         for row in df.itertuples(index=True, name=None):
             if row[0] != 0:
                 create_table += ", "
             create_table += row[1] + " " + row[4]
-            #print("query" + create_table)
         create_table += ") strict;"
       
-        print("query: " + create_table)
+        #print("query: " + create_table)
         try:
             cur = con.cursor()
             cur.execute(create_table)
@@ -119,7 +122,7 @@ def check_schema(file_path, schema_table, file_table, con):
     # add end of query
     query += " from " + file_table 
 
-    print(query)
+    #print(query)
 
     # catch error - some expected passes, some expected fails
     fail = False
@@ -131,7 +134,7 @@ def check_schema(file_path, schema_table, file_table, con):
         else:
             print("\tFAIL: Schema check failed, expected to succeed.")
             print("\t\t", err)
-        fail = True
+            fail = True
     except sql.OperationalError as err:
         if(expect_success == False):
             print("\tSuccess: Schema check failed as expected.")
@@ -167,7 +170,7 @@ def check_rules(data_type, schema_version, con):
         rule_sql = row[3]    
         print("\tChecking rule: " + rule_name)
         
-        print("Rule sql: " + rule_sql)
+        #print("Rule sql: " + rule_sql)
         try:
             cur.execute(rule_sql) 
         except Exception as err:
@@ -212,4 +215,65 @@ def drop_all_tables(data_type, con):
     for table_name in table_names:
         cur.execute("drop table " + table_name)
     
+def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
+    print("TEST: Testing geojson file: " + ifile_name)
+
+    expect_success = check_expect_success('schema', ifile_name)
+        
+    # get jsonschema for flex locations.geojson file
+    sdir_path = 'schemas/' + data_type + "/" + schema_version + "/"
+    sfile_path = sdir_path + "locations_geojson_jsonschema.json"
+    #print("reading file " + file_path) 
+    jsonschema_file = open(sfile_path, "r")
+    locations_schema = json.load(jsonschema_file)
+    jsonschema_file.close()
+    #print(locations_schema)
+
+    ifile_path = idir_path + "/" + ifile_name 
+    ijsonschema_file = open(ifile_path, "r")
+    locations_instance = json.load(ijsonschema_file)
+    ijsonschema_file.close()
+
+    try:
+        jsvalidate(locations_instance, locations_schema)
+        #jsvalidate(instance={"name" : "Eggs", "price" : 34.99}, 
+        #            schema=locations_schema)
+    except Exception as err:
+        if(expect_success == False):
+            print("\tSuccess: geojson schema check failed as expected.")
+        else:
+            raise gcvex.TestFailed("test schema check on locations.geojson failed")
+    else:
+        print("flex locations geojson test succeeded")
+
+
+def test_csv_file(data_type,file_name,dir_path,con):
+    print("TEST: Testing csv file: " + file_name)
+    # data_type is pathways, or flex 
+    if(data_type == 'gtfs_pathways'):
+        if(re.search('levels', file_name, re.IGNORECASE) != None):  
+            schema_table = 'levels'
+            file_table = 'levels_file'
+        elif(re.search('pathways', file_name, re.IGNORECASE) != None):  
+            schema_table = 'pathways'
+            file_table = 'pathways_file'
+        elif(re.search('stops', file_name, re.IGNORECASE) != None):  
+            schema_table = 'stops'
+            file_table = 'stops_file'
+    elif(data_type == 'gtfs_flex'):
+        if(re.search('booking_rules', file_name, re.IGNORECASE) != None):  
+            schema_table = 'booking_rules'
+            file_table = 'booking_rules_file'
+        elif(re.search('location_groups', file_name, re.IGNORECASE) != None):  
+            schema_table = 'location_groups'
+            file_table = 'location_groups_file'
+        elif(re.search('stop_times', file_name, re.IGNORECASE) != None):  
+            schema_table = 'stop_times'
+            file_table = 'stops_times_file'
+    else:
+        raise AssertionError('only flex and pathways supported')
+        
+    # file_path, data_type, con
+    file_path = dir_path + '/' + file_name
+    check_schema(file_path, schema_table, file_table, con)
 
