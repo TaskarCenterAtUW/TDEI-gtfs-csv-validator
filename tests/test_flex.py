@@ -25,8 +25,8 @@ import sqlite3 as sql
 data_type = 'gtfs_flex' 
 schema_version = 'v2.0' 
 
-#test_dirs = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs']
-test_dirs = ['tests/test_files/gtfs_flex/v2.0/fail_schema_1']
+test_dirs = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs']
+#test_dirs = ['tests/test_files/gtfs_flex/v2.0/fail_schema_1']
 
 # set up sqlite connection
 # create a temp db in RAM
