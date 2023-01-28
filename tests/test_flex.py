@@ -1,6 +1,6 @@
 # test the gtfs-csv-validator with gtfs-flex files
 
-# do not like this, but could not figure out how to make the paths work well
+# TODO do not like this, but could not figure out how to make the paths work well
 # needs to be updated, but functions
 import sys
 sys.path.append(".")
@@ -39,7 +39,7 @@ for dir_path in test_dirs:
     try:
         gcv_runtests.run_tests(data_type, schema_version, dir_path, con)
     except Exception as err:
-        print("TEST FAILED")
+        gcvsup.gcv_debug("TEST FAILED")
         print(err)
     else:
         print("TEST SUCCEEDED - ALL DONE")

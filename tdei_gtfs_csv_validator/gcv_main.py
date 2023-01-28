@@ -34,7 +34,9 @@ import gcv_runtests as gcvtests
 #             stops files. gtfs_flex expects booking_rules, loction_groups
 #             and stop_times files
 
-def gcv_main():
+# TODO - can this be deleted???
+# commenting out this function to see if I can get by with deleting it
+""" def gcv_main():
     # set the params here - provide a data_type, schema_version and path to directory
     # with files to be validated
     data_type = 'gtfs_pathways' # or 'gtfs-flex' for flex
@@ -60,7 +62,7 @@ def gcv_main():
             print("TEST SUCCEEDED - ALL DONE")
 
     con.close()
-
+"""
 
 
 

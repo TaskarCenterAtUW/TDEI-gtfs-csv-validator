@@ -11,12 +11,12 @@ from tdei_gtfs_csv_validator import gcv_support as gcvsup
 from tdei_gtfs_csv_validator import exceptions as gcvex 
 
 def run_tests(data_type, schema_version, dir_path, con):
-    print("TEST: begin run_tests")
+    gcvsup.gcv_debug("TEST: begin run_tests")
 
     # create all tables for this particular data_type
     gcvsup.create_schema_tables(data_type, schema_version, con)
     
-    print("TEST: schema tables created")
+    gcvsup.gcv_debug("TEST: schema tables created")
 
     # read all files from directory test_files/data_schema/version
     file_list = os.listdir(path = dir_path)
@@ -42,7 +42,7 @@ def run_tests(data_type, schema_version, dir_path, con):
         else:
             raise gcvex.UnexpectedDataType()
 
-    print("checking " + data_type + " rules on " + dir_path)
+    gcvsup.gcv_debug("checking " + data_type + " rules on " + dir_path)
     try:
         gcvsup.check_rules(data_type, schema_version, con)
     except Exception as err:

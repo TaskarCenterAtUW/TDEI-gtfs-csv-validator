@@ -1,6 +1,6 @@
 # test the gtfs-csv-validator with gtfs-pathways files
 
-# don't like this, but couldn't figure out how to make the paths work
+# TODO don't like this, but couldn't figure out how to make the paths work
 import sys
 sys.path.append(".")
 

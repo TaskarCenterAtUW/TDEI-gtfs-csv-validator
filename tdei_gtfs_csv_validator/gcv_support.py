@@ -21,7 +21,7 @@ import json
 # first argument is the name/path of the csvfile to be converted to the table
 # second argument is the name of the table to be created
 def csv_to_table(file_name, table_name, con):
-    #print("csv_to_table")
+    gcv_debug("csv_to_table",2)
     # skipinitialspace skips spaces after (comma) delimiters
     # lines that start with # (commented lines) will be ignored 
     df = pd.read_csv(file_name, skipinitialspace='True', comment="#")
@@ -35,7 +35,7 @@ def csv_to_table(file_name, table_name, con):
 # this function will read the file schema_version_schema.csv
 # to get the schema definition
 def create_schema_tables(data_type, schema_version, con):
-    print("begin create_schema_tables")
+    gcv_debug("begin create_schema_tables")
 
     dir_path = 'schemas/' + data_type + "/" + schema_version + "/"
     table_names = []
@@ -49,7 +49,7 @@ def create_schema_tables(data_type, schema_version, con):
 
     for table_name in table_names:
         file_path = dir_path + table_name + "_schema.csv"
-        #print("reading file " + file_path) 
+        gcv_debug("reading file " + file_path,2) 
         df = pd.read_csv(file_path, skipinitialspace='True', comment='#')
         create_table = "CREATE TABLE '" + table_name + "'("  
         for row in df.itertuples(index=True, name=None):
@@ -58,16 +58,16 @@ def create_schema_tables(data_type, schema_version, con):
             create_table += row[1] + " " + row[4]
         create_table += ") strict;"
       
-        #print("query: " + create_table)
+        gcv_debug("query: " + create_table,2)
         try:
             cur = con.cursor()
             cur.execute(create_table)
         except Exception as excep:
-            print(excep)
+            gcv_debug(excep)
             raise excep
-        print("schema table " + table_name + " created")
+        gcv_debug("schema table " + table_name + " created")
     
-    print("schema_tables created")
+    gcv_debug("schema_tables created")
 
 
 # this function takes the name of the test and the file name and
@@ -83,7 +83,7 @@ def check_expect_success(test_name, file_name):
 
 
 def check_schema(file_path, schema_table, file_table, con):
-    print("TEST: Checking schema: ")
+    gcv_debug("TEST: Checking schema: ")
     # check to see if success or fail in file name
     expect_success = check_expect_success('schema', file_path)
 
@@ -122,7 +122,7 @@ def check_schema(file_path, schema_table, file_table, con):
     # add end of query
     query += " from " + file_table 
 
-    #print(query)
+    gcv_debug(query,2)
 
     # catch error - some expected passes, some expected fails
     fail = False
@@ -130,26 +130,26 @@ def check_schema(file_path, schema_table, file_table, con):
         cur.execute(query)
     except sql.IntegrityError as err:
         if(expect_success == False):
-            print("\tSuccess: Schema check failed as expected.")
+            gcv_debug("\tSuccess: Schema check failed as expected.")
         else:
-            print("\tFAIL: Schema check failed, expected to succeed.")
-            print("\t\t", err)
+            gcv_debug("\tFAIL: Schema check failed, expected to succeed.")
+            gcv_debug("\t\t", err)
             fail = True
     except sql.OperationalError as err:
         if(expect_success == False):
-            print("\tSuccess: Schema check failed as expected.")
+            gcv_debug("\tSuccess: Schema check failed as expected.")
         else:
-            print("\tFAIL: Schema check failed, expected to succeed.")
-            print("\t\t", err)
+            gcv_debug("\tFAIL: Schema check failed, expected to succeed.")
+            gcv_debug("\t\t", err)
             fail = True
     except Exception as err:
-        print(f"unexpected {err=}, {type(err)=}") 
+        gcv_debug(f"unexpected {err=}, {type(err)=}") 
         raise
     else:
         if(expect_success == True):
-            print("\tSuccess: Schema check succeeded as expected")
+            gcv_debug("\tSuccess: Schema check succeeded as expected")
         else:
-            print("\tFAIL: Schema check succeeded, expected to fail.")
+            gcv_debug("\tFAIL: Schema check succeeded, expected to fail.")
             fail = True
     
     if(fail == True):
@@ -157,7 +157,7 @@ def check_schema(file_path, schema_table, file_table, con):
 
 
 def check_rules(data_type, schema_version, con):
-    print("TEST: begin check rules") 
+    gcv_debug("TEST: begin check rules") 
     rules_file = 'rules/' + data_type + "_" + schema_version + "_rules.csv"
     df = pd.read_csv(rules_file, skipinitialspace='True', 
         comment='#')
@@ -168,24 +168,24 @@ def check_rules(data_type, schema_version, con):
         rule_name = row[1]
         fail_msg = row[2]
         rule_sql = row[3]    
-        print("\tChecking rule: " + rule_name)
+        gcv_debug("\tChecking rule: " + rule_name)
         
-        #print("Rule sql: " + rule_sql)
+        gcv_debug("Rule sql: " + rule_sql,2)
         try:
             cur.execute(rule_sql) 
         except Exception as err:
-            print("unexpected query execution error")
-            print(err)
+            gcv_debug("unexpected query execution error")
+            gcv_debug(err)
             raise 
             
         row = cur.fetchone()
         if row is not None:
-            print("\t\tFAIL:" + rule_name + " failed " + fail_msg)
-            print("Failing row:")
-            print(row)
+            gcv_debug("\t\tFAIL:" + rule_name + " failed " + fail_msg)
+            gcv_debug("Failing row:")
+            gcv_debug(row)
             raise gcvex.TestFailed("test " + rule_name + "failed")
         else:
-            print("\t\tSuccess: " + rule_name + " succeeded")
+            gcv_debug("\t\tSuccess: " + rule_name + " succeeded")
 
 def print_schema_tables(data_type, con):
     cur = con.cursor()
@@ -199,7 +199,7 @@ def print_schema_tables(data_type, con):
 
     for table_name in table_names:
         cur.execute("Select * from " + table_name)
-        print(cur.fetchall())
+        gcv_debug(cur.fetchall())
 
 
 def drop_all_tables(data_type, con):
@@ -216,18 +216,17 @@ def drop_all_tables(data_type, con):
         cur.execute("drop table " + table_name)
     
 def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
-    print("TEST: Testing geojson file: " + ifile_name)
+    gcv_debug("TEST: Testing geojson file: " + ifile_name)
 
     expect_success = check_expect_success('schema', ifile_name)
         
     # get jsonschema for flex locations.geojson file
     sdir_path = 'schemas/' + data_type + "/" + schema_version + "/"
-    sfile_path = sdir_path + "locations_geojson_jsonschema.json"
-    #print("reading file " + file_path) 
+    sfile_path = sdir_path + "locations_geojson_jsonschema.json" 
     jsonschema_file = open(sfile_path, "r")
     locations_schema = json.load(jsonschema_file)
     jsonschema_file.close()
-    #print(locations_schema)
+    gcv_debug(locations_schema,2)
 
     ifile_path = idir_path + "/" + ifile_name 
     ijsonschema_file = open(ifile_path, "r")
@@ -240,15 +239,15 @@ def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
         #            schema=locations_schema)
     except Exception as err:
         if(expect_success == False):
-            print("\tSuccess: geojson schema check failed as expected.")
+            gcv_debug("\tSuccess: geojson schema check failed as expected.")
         else:
             raise gcvex.TestFailed("test schema check on locations.geojson failed")
     else:
-        print("flex locations geojson test succeeded")
+        gcv_debug("flex locations geojson test succeeded")
 
 
 def test_csv_file(data_type,file_name,dir_path,con):
-    print("TEST: Testing csv file: " + file_name)
+    gcv_debug("TEST: Testing csv file: " + file_name)
     # data_type is pathways, or flex 
     if(data_type == 'gtfs_pathways'):
         if(re.search('levels', file_name, re.IGNORECASE) != None):  
@@ -276,4 +275,21 @@ def test_csv_file(data_type,file_name,dir_path,con):
     # file_path, data_type, con
     file_path = dir_path + '/' + file_name
     check_schema(file_path, schema_table, file_table, con)
+
+# debug_log function provides internal support for debugging for the gcv
+# intended use is to replace the internals of this function with code 
+# to handle debug messages as the dev wants - for example - print statement
+# to print debug info to console or leave empty to have no debug messages
+# allows multiple levels of priority...
+def gcv_debug(log_msg, priority=1):
+    """function to support debugging messages for the gcv""" 
+    #if(priority == 1):
+    #    print(log_msg)
+
+# debug_log function provides internal support for logging for the gcv
+# intended use is to replace the internals of this function with code 
+# to handle log messages - expect to replace this empty function with 
+# calls to logging in the core library
+def gcv_log(log_msg):
+    """function to support logging for gcv"""
 
