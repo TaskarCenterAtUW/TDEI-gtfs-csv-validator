@@ -1,5 +1,8 @@
 # support functions for gtfs-csv-validator
 
+# TODO - would like this to be a class
+
+# TODO - path hack - try to remove
 import sys
 sys.path.append(".")
 
@@ -44,8 +47,7 @@ def create_schema_tables(data_type, schema_version, con):
     elif(data_type == 'gtfs_flex'):
         table_names = ["booking_rules", "location_groups", "stop_times"]
     else:
-        raise RuntimeError("unexpected data type")
-
+        raise gcvex.GCVUnexpectedDataType(data_type) 
 
     for table_name in table_names:
         file_path = dir_path + table_name + "_schema.csv"
@@ -59,35 +61,19 @@ def create_schema_tables(data_type, schema_version, con):
         create_table += ") strict;"
       
         gcv_debug("query: " + create_table,2)
-        try:
-            cur = con.cursor()
-            cur.execute(create_table)
-        except Exception as excep:
-            gcv_debug(excep)
-            raise excep
+        cur = con.cursor()
+        cur.execute(create_table)
         gcv_debug("schema table " + table_name + " created")
     
     gcv_debug("schema_tables created")
 
 
-# this function takes the name of the test and the file name and
-# checks to see if the file is expected to fail or pass this test
-# returns yes if success is expected, no if file is expected to fail
-# the test
-def check_expect_success(test_name, file_name):
-    # expect fail if we have Fail, fail or FAIL and the test name in the file name
-    if(re.search('Fail', file_name, re.IGNORECASE) != None and 
-        re.search(test_name, file_name) != None):
-            return False; # if Fail, fail, or FAIL in file name
-    return True;
-
-
 def check_schema(file_path, schema_table, file_table, con):
-    gcv_debug("TEST: Checking schema: ")
-    # check to see if success or fail in file name
-    expect_success = check_expect_success('schema', file_path)
+    gcv_debug("Checking schema: " + file_path)
 
     # load pathways, flex file into table...
+    # file_table contains the data from the csv file to be checked
+    # schema_table is the table that matches the appropriate schema
     csv_to_table(file_path, file_table, con)
 
     cur = con.cursor()
@@ -124,40 +110,25 @@ def check_schema(file_path, schema_table, file_table, con):
 
     gcv_debug(query,2)
 
-    # catch error - some expected passes, some expected fails
     fail = False
+    err_msg = ''
     try:
         cur.execute(query)
-    except sql.IntegrityError as err:
-        if(expect_success == False):
-            gcv_debug("\tSuccess: Schema check failed as expected.")
-        else:
-            gcv_debug("\tFAIL: Schema check failed, expected to succeed.")
-            gcv_debug("\t\t", err)
-            fail = True
-    except sql.OperationalError as err:
-        if(expect_success == False):
-            gcv_debug("\tSuccess: Schema check failed as expected.")
-        else:
-            gcv_debug("\tFAIL: Schema check failed, expected to succeed.")
-            gcv_debug("\t\t", err)
-            fail = True
-    except Exception as err:
-        gcv_debug(f"unexpected {err=}, {type(err)=}") 
-        raise
-    else:
-        if(expect_success == True):
-            gcv_debug("\tSuccess: Schema check succeeded as expected")
-        else:
-            gcv_debug("\tFAIL: Schema check succeeded, expected to fail.")
-            fail = True
-    
+    except (sql.IntegrityError, sql.DataError) as err:
+        ## TODO Raise schema check failed error with whatever part of error as error msg
+        fail = True
+        err_msg += "Schema check failed on: " + file_path + " Error: " + str(err) + "\n\n" 
+    except sql.Error as err:
+        fail = True
+        err_msg += "Unexpected SQL error on: " + file_path + " Error: " + str(err) + "\n\n" 
+
+    gcv_debug("finished checking schema on " + file_path + " result " + str(fail))
+
     if(fail == True):
-        raise gcvex.TestFailed("schema check failed")
+        raise gcvex.GCVSchemaTestError(err_msg)
 
-
-def check_rules(data_type, schema_version, con):
-    gcv_debug("TEST: begin check rules") 
+def check_rules(data_type, schema_version, con, dir_path):
+    gcv_debug("begin check rules") 
     rules_file = 'rules/' + data_type + "_" + schema_version + "_rules.csv"
     df = pd.read_csv(rules_file, skipinitialspace='True', 
         comment='#')
@@ -171,21 +142,29 @@ def check_rules(data_type, schema_version, con):
         gcv_debug("\tChecking rule: " + rule_name)
         
         gcv_debug("Rule sql: " + rule_sql,2)
+        fail = False
+        err_msg = ''
         try:
             cur.execute(rule_sql) 
-        except Exception as err:
-            gcv_debug("unexpected query execution error")
-            gcv_debug(err)
-            raise 
+        except (sql.IntegrityError, sql.DataError) as err: #TODO - which errors?
+            fail = True
+            err_msg += "Rules check failed on: " + dir_path + " Error: " + str(err) + "\n\n" 
+            # continue if we get an expected sql error - indicates test failed
+        except sql.Error as err:
+            fail = True
+            err_msg += "Unexpected SQL error on: " + dir_path + " Error: " + str(err) + "\n\n" 
+            raise # raise if we get an unexpected sql error - indicates code issue
             
         row = cur.fetchone()
         if row is not None:
-            gcv_debug("\t\tFAIL:" + rule_name + " failed " + fail_msg)
-            gcv_debug("Failing row:")
-            gcv_debug(row)
-            raise gcvex.TestFailed("test " + rule_name + "failed")
+            err_msg += "\nFAIL:" + rule_name + " failed " + fail_msg
+            err_msg += "\n on row " + str(row)
+            fail = True
         else:
             gcv_debug("\t\tSuccess: " + rule_name + " succeeded")
+
+        if(fail == True):
+            raise gcvex.GCVRuleTestError(err_msg)
 
 def print_schema_tables(data_type, con):
     cur = con.cursor()
@@ -195,7 +174,7 @@ def print_schema_tables(data_type, con):
     elif(data_type == 'gtfs_flex'):
         table_names = ["booking_rules", "location_groups", "stop_times"]
     else:
-        raise gcvex.UnexpectedDataType()
+        raise gcvex.GCVUnexpectedDataTypeError(data_type)
 
     for table_name in table_names:
         cur.execute("Select * from " + table_name)
@@ -210,15 +189,13 @@ def drop_all_tables(data_type, con):
     elif(data_type == 'gtfs_flex'):
         table_names = ["booking_rules", "location_groups", "stop_times"]
     else:
-        raise gcvex.UnexpectedDataType()
+        raise gcvex.GCVUnexpectedDataTypeError(data_type)
     
     for table_name in table_names:
         cur.execute("drop table " + table_name)
     
 def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
-    gcv_debug("TEST: Testing geojson file: " + ifile_name)
-
-    expect_success = check_expect_success('schema', ifile_name)
+    gcv_debug("Testing geojson file: " + ifile_name)
         
     # get jsonschema for flex locations.geojson file
     sdir_path = 'schemas/' + data_type + "/" + schema_version + "/"
@@ -238,16 +215,13 @@ def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
         #jsvalidate(instance={"name" : "Eggs", "price" : 34.99}, 
         #            schema=locations_schema)
     except Exception as err:
-        if(expect_success == False):
-            gcv_debug("\tSuccess: geojson schema check failed as expected.")
-        else:
-            raise gcvex.TestFailed("test schema check on locations.geojson failed")
+        raise gcvex.GCVGeoJsonCheckError("test schema check on locations.geojson failed in dir " + idir_path + "\n\n")
     else:
         gcv_debug("flex locations geojson test succeeded")
 
 
 def test_csv_file(data_type,file_name,dir_path,con):
-    gcv_debug("TEST: Testing csv file: " + file_name)
+    gcv_debug("Testing csv file: " + file_name)
     # data_type is pathways, or flex 
     if(data_type == 'gtfs_pathways'):
         if(re.search('levels', file_name, re.IGNORECASE) != None):  
@@ -270,7 +244,7 @@ def test_csv_file(data_type,file_name,dir_path,con):
             schema_table = 'stop_times'
             file_table = 'stops_times_file'
     else:
-        raise AssertionError('only flex and pathways supported')
+        raise gcvex.GCVUnexpectedDataTypeError('data_type')
         
     # file_path, data_type, con
     file_path = dir_path + '/' + file_name
