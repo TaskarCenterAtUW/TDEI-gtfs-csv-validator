@@ -7,15 +7,8 @@ sys.path.append("src")
 import re as re
 from tdei_gtfs_csv_validator import gcv_test_release
 from tdei_gtfs_csv_validator import exceptions as gcvex 
-import sqlite3 as sql
 
 def test_dir(data_type, schema_version, test_dirs):
-
-    # set up sqlite connection
-    # create a temp db in RAM
-    # schemas are stored in csv files for clarity and ease of maintenance
-    con = sql.connect(':memory:') 
-    cur = con.cursor()
 
     for dir_path in test_dirs:  
         print("Calling run_tests on " + dir_path)
@@ -24,7 +17,7 @@ def test_dir(data_type, schema_version, test_dirs):
             expect_success = False; # if Fail, fail, or FAIL in file name
     
         try:
-            gcv_test_release.test_release(data_type, schema_version, dir_path, con)
+            gcv_test_release.test_release(data_type, schema_version, dir_path)
         except gcvex.GCVError as err:
             if expect_success == False:
                 print("Test Failed as expected\n")
@@ -37,8 +30,6 @@ def test_dir(data_type, schema_version, test_dirs):
                 print(err)
         else: # if no exceptions
             print("Test Succeeded")
-
-    con.close()
 
 
 # this function takes the name of the test and the file name and

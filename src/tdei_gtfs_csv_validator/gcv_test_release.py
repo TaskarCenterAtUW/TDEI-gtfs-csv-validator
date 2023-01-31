@@ -1,20 +1,24 @@
 # test fncs for gtfs-csv-validator
 
-# TODO don't like this, but couldn't figure out how to make the paths work
-#import sys
-#sys.path.append(".")
-
 import fnmatch
 import os as os
 import re as re
 from tdei_gtfs_csv_validator import gcv_support as gcvsup
-from tdei_gtfs_csv_validator import exceptions as gcvex 
+from tdei_gtfs_csv_validator import exceptions as gcvex
+import sqlite3 as sql 
 
-def test_release(data_type, schema_version, dir_path, con):
+def test_release(data_type, schema_version, dir_path):
+
+    # set up sqlite connection
+    # create a temp db in RAM
+    # schemas are stored in csv files for clarity and ease of maintenance
+    con = sql.connect(':memory:') 
+
     gcvsup.gcv_debug("testing release in directory: " + dir_path)
 
     # create all tables for this particular data_type
     gcvsup.create_schema_tables(data_type, schema_version, con)
+    # TODO - should close con if this fails
     
     gcvsup.gcv_debug("schema tables created")
 
@@ -37,6 +41,7 @@ def test_release(data_type, schema_version, dir_path, con):
     # if schema check failed, pass back log of errors
     if(fail):
         gcvsup.drop_all_tables(data_type, con)
+        con.close()
         raise gcvex.GCVSchemaTestError(error_log) 
 
     # else if schema check passed, now check rules
@@ -46,11 +51,13 @@ def test_release(data_type, schema_version, dir_path, con):
         gcvsup.check_rules(data_type, schema_version, con, dir_path)
     except Exception as err:
         gcvsup.drop_all_tables(data_type, con)
+        con.close()
         raise
     else:
         # command to print out the tables for debugging...
         # gcvsup.print_schema_tables(data_type, con)
         gcvsup.drop_all_tables(data_type, con)
+        con.close()
 
 
 def test_file(data_type, schema_version, file_name, dir_path, con):

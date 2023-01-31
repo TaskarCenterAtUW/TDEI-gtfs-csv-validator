@@ -1,43 +1,47 @@
-This is intended to be a framework for a gtfs file validator for TDEI project
+This package can be used to validate GTFS CSV files. It is
+focused on GTFS-Pathways and GTFS-Flex files. 
+
+## Using tdei_gtfs_csv_validator
+The primary function in this package is test_release. A GTFS release
+is a set of GTFS files. This code will test GTFS-Flex and GTFS-Pathways
+releases. The tests focus on the flex- and pathways-specific files (for now).
+
+### Using the test_release function
+Call the test_release function to test a GTFS release. Currently, the GTFS release is
+expected to be a directory which contains the flex or pathways release.  
+For pathways, the script expects the release to contain levels, pathways and stops files.
+For flex, the script expects the release to contain booking_rules, location_groups and stop_times files.
+
+To validate your own release, put the files for the release that you want to validate in a directory and then 
+run test_release. Note: for now input is a directory, will be updated to be a zip file sometime.
+
+Parameters to test_release are:
+    data_type = 'gtfs_pathways' (or 'gtfs_flex' )
+    schema_version = 'v1.0' (for pathways) (or 'v2.0' for flex)
+    dir_path = path to directory where the files in the release are
+
+Test files are provided in the test_files directory which can be used for referece or in testing the script below.
+
+## Testing the script
+This package contains a set of tests to test the script. There are two primary sets of tests - tests to test flex releases (test_flex.py) and tests to test pathways releases (test_pathways.py). These tests use the files which can be found in the test_files subdirectory of the tests directory. You can run various tests by changing Execute either of those files (without modification) to run those tests. 
 
 ## Code structure
 The structure is that the gtfs csv files are read into a sqlite database - the load into
 the db does some of the schema checking. The load into the db is followed by running a set of sql
 queries which do an additional set of checks.
 
-## Validate a file
-To validate a file, edit the gcv_main.py file with the appropriate data_type, schema_version and
-test_dirs as instructed in the file. The script is currently set up to validate the mbta_20220920 files.
+## Adding tests 
+### Adding a new release to be used in testing the scripts
+To add a flex or pathways release to be used to test the script (note a release is a set of GTFS files), go to the appropriate directory under test_files and add a directory with the appropriate files. Then edit the appropriate test script to add that directory to the test.
 
-When validating your own files:
-put the files you want to validate in a directory, or create a set of directories you want to test, each directory should contain a pathways 'release' or a flex 'release' 
+### Adding a new rule to be tested 
+To add a new rule to be tested test - for example - if you want to add a new pathways or flex requirement, go rules and edit the appropriate file and add a rule name, a message to be printed when the test fails and a sql query for the test. The sql query should be written so that if the sql query returns anything other than 'None' the test will be marked as failing.
 
-For pathways, the script expects the directory to contain levels, pathways and stops files
+### Adding a new type of file to be tested
+If you wish to add a new flex or pathways file type to be tested - the current code tests only the Flex and Pathways-specific files, so tests for other files in the GTFS spec need to be added. To do so, go to the gtfs_flex or gtfs_pathways directory in the schemas directory and add a file describing the new file. Columns you will need are are: FieldName, Type, Required (from GTFS spec), sqliteType. FieldName, Type and Required are to be taken from the GTFS spec, the sqliteType is a string that creates an attribute of the appropriate type in sqllite
 
-For flex, the script expects the directory to contain booking_rules, location_groups and stop_times files
 
-Test files are provided in the test_files directory
+## TODOs
+gcv_test_release should function as command line (it doesn't right now)
 
-Edit gcv_main.py to set the variables:
-    data_type = 'gtfs_pathways' (or 'gtfs_flex' )
-    schema_version = 'v1.0' (for pathways) (or 'v2.0' for flex)
-    test_dirs = ['path to dir 1', 'path to dir 2', ...]
-
-then execute main.py
-
-results and some logging are printed to the console
-
-## Test the script
-This package also contains tests to test the script. There are two primary sets of tests - test_flex.py and test_pathways.py for flex and pathways respectively. Execute either of those files (without modification) to run those tests. 
-
-## Adding a test release
-To add a flex or pathways release to be used to test the script, go to the appropriate directory under test_files and add a directory with the appropriate files. Then edit the test script to add that directory to the test.
-
-## Adding a test
-To add a test - for example - a new pathways or flex requirement, go rules and edit the appropriate file and add a rule name, a message to be printed when the test fails and a sql query for the test. If the sql query returns anything other than 'None' the test will be
-marked as failing.
-
-## Adding a new file type
-If you wish to add a new flex or pathways file type, go to schemas and add a file
-describing the new files. Columns used are: FieldName, Type, Required (from GTFS spec), sqliteType. FieldName, Type and Required are to be taken from the GTFS spec, the sqliteType 
-is a string that creates an attribute of the appropriate type in sqllite
+works on directories not on zip files - needs to be changed
