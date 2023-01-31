@@ -1,8 +1,8 @@
 # test fncs for gtfs-csv-validator
 
-# don't like this, but couldn't figure out how to make the paths work
-import sys
-sys.path.append(".")
+# TODO don't like this, but couldn't figure out how to make the paths work
+#import sys
+#sys.path.append(".")
 
 import fnmatch
 import os as os

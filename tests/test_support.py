@@ -2,7 +2,7 @@
  
 # TODO don't like this, but couldn't figure out how to make the paths work
 import sys
-sys.path.append(".")
+sys.path.append("src")
 
 import re as re
 from tdei_gtfs_csv_validator import gcv_test_release
