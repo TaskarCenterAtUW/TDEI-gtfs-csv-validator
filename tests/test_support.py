@@ -2,7 +2,7 @@
  
 # TODO don't like this, but couldn't figure out how to make the paths work
 import sys
-sys.path.append("src")
+sys.path.append(".") # gets tdei_gtfs_csv_validator included, but can't find schema files
 
 import re as re
 from tdei_gtfs_csv_validator import gcv_test_release

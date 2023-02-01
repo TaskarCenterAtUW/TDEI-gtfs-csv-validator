@@ -2,10 +2,6 @@
 
 # TODO - would like this to be a class
 
-# TODO - path hack - try to remove
-import sys
-sys.path.append(".")
-
 import os as os
 import re as re
 import sqlite3 as sql
@@ -40,7 +36,7 @@ def csv_to_table(file_name, table_name, con):
 def create_schema_tables(data_type, schema_version, con):
     gcv_debug("begin create_schema_tables")
 
-    dir_path = 'schemas/' + data_type + "/" + schema_version + "/"
+    dir_path = 'tdei_gtfs_csv_validator/schemas/' + data_type + "/" + schema_version + "/"
     table_names = []
     if(data_type == 'gtfs_pathways'):
         table_names = ["levels", "pathways", "stops"]
@@ -129,7 +125,7 @@ def check_schema(file_path, schema_table, file_table, con):
 
 def check_rules(data_type, schema_version, con, dir_path):
     gcv_debug("begin check rules") 
-    rules_file = 'rules/' + data_type + "_" + schema_version + "_rules.csv"
+    rules_file = 'tdei_gtfs_csv_validator/rules/' + data_type + "_" + schema_version + "_rules.csv"
     df = pd.read_csv(rules_file, skipinitialspace='True', 
         comment='#')
     cur = con.cursor()
@@ -198,7 +194,7 @@ def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
     gcv_debug("Testing geojson file: " + ifile_name)
         
     # get jsonschema for flex locations.geojson file
-    sdir_path = 'schemas/' + data_type + "/" + schema_version + "/"
+    sdir_path = 'tdei_gtfs_csv_validator/schemas/' + data_type + "/" + schema_version + "/"
     sfile_path = sdir_path + "locations_geojson_jsonschema.json" 
     jsonschema_file = open(sfile_path, "r")
     locations_schema = json.load(jsonschema_file)
