@@ -6,9 +6,12 @@ import os as os
 import re as re
 import sqlite3 as sql
 import pandas as pd
-from tdei_gtfs_csv_validator import exceptions as gcvex 
 from jsonschema import validate as jsvalidate
 import json
+from pathlib import Path
+
+import tdei_gtfs_csv_validator # need to get module path, maybe there is a better way...
+from tdei_gtfs_csv_validator import exceptions as gcvex 
 
 # Uses: https://github.com/python-jsonschema/jsonschema
 
@@ -36,7 +39,12 @@ def csv_to_table(file_name, table_name, con):
 def create_schema_tables(data_type, schema_version, con):
     gcv_debug("begin create_schema_tables")
 
-    dir_path = 'tdei_gtfs_csv_validator/schemas/' + data_type + "/" + schema_version + "/"
+    if(len(tdei_gtfs_csv_validator.__path__) !=1):
+        raise Exception("unexpected path length in gcv_support")
+
+    mod_path = Path(tdei_gtfs_csv_validator.__path__[0])
+    dir_path = mod_path / 'schemas' / data_type / schema_version
+
     table_names = []
     if(data_type == 'gtfs_pathways'):
         table_names = ["levels", "pathways", "stops"]
@@ -46,8 +54,8 @@ def create_schema_tables(data_type, schema_version, con):
         raise gcvex.GCVUnexpectedDataType(data_type) 
 
     for table_name in table_names:
-        file_path = dir_path + table_name + "_schema.csv"
-        gcv_debug("reading file " + file_path,2) 
+        file_path = dir_path / (table_name + "_schema.csv")
+        gcv_debug("reading file " + file_path.name,2) 
         df = pd.read_csv(file_path, skipinitialspace='True', comment='#')
         create_table = "CREATE TABLE '" + table_name + "'("  
         for row in df.itertuples(index=True, name=None):
@@ -62,7 +70,6 @@ def create_schema_tables(data_type, schema_version, con):
         gcv_debug("schema table " + table_name + " created")
     
     gcv_debug("schema_tables created")
-
 
 def check_schema(file_path, schema_table, file_table, con):
     gcv_debug("Checking schema: " + file_path)
@@ -125,7 +132,13 @@ def check_schema(file_path, schema_table, file_table, con):
 
 def check_rules(data_type, schema_version, con, dir_path):
     gcv_debug("begin check rules") 
-    rules_file = 'tdei_gtfs_csv_validator/rules/' + data_type + "_" + schema_version + "_rules.csv"
+
+    if(len(tdei_gtfs_csv_validator.__path__) !=1):
+        raise Exception("unexpected path length in gcv_support")
+
+    mod_path = Path(tdei_gtfs_csv_validator.__path__[0])
+    rules_file = mod_path / 'rules' / (data_type + "_" + schema_version + "_rules.csv")
+
     df = pd.read_csv(rules_file, skipinitialspace='True', 
         comment='#')
     cur = con.cursor()
@@ -193,9 +206,14 @@ def drop_all_tables(data_type, con):
 def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
     gcv_debug("Testing geojson file: " + ifile_name)
         
+    if(len(tdei_gtfs_csv_validator.__path__) !=1):
+        raise Exception("unexpected path length in gcv_support")
+
+    mod_path = Path(tdei_gtfs_csv_validator.__path__[0])
+    
     # get jsonschema for flex locations.geojson file
-    sdir_path = 'tdei_gtfs_csv_validator/schemas/' + data_type + "/" + schema_version + "/"
-    sfile_path = sdir_path + "locations_geojson_jsonschema.json" 
+    sfile_path = mod_path / 'schemas' / data_type / schema_version / 'locations_geojson_jsonschema.json'
+    #sfile_path = sdir_path + "locations_geojson_jsonschema.json" 
     jsonschema_file = open(sfile_path, "r")
     locations_schema = json.load(jsonschema_file)
     jsonschema_file.close()
@@ -208,8 +226,7 @@ def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
 
     try:
         jsvalidate(locations_instance, locations_schema)
-        #jsvalidate(instance={"name" : "Eggs", "price" : 34.99}, 
-        #            schema=locations_schema)
+    
     except Exception as err:
         raise gcvex.GCVGeoJsonCheckError("test schema check on locations.geojson failed in dir " + idir_path + "\n\n")
     else:

@@ -1,8 +1,13 @@
  # support functions for testing
  
-# TODO don't like this, but couldn't figure out how to make the paths work
-import sys
-sys.path.append(".") # gets tdei_gtfs_csv_validator included, but can't find schema files
+
+# find the module... is one directory up
+from pathlib import Path
+import sys 
+
+cur_path = Path(__file__)
+mod_path = cur_path.parents[1]
+sys.path.append(str(mod_path))
 
 import re as re
 from tdei_gtfs_csv_validator import gcv_test_release
@@ -20,14 +25,11 @@ def test_dir(data_type, schema_version, test_dirs):
             gcv_test_release.test_release(data_type, schema_version, dir_path)
         except gcvex.GCVError as err:
             if expect_success == False:
-                print("Test Failed as expected\n")
-                print(err)
+                print("Test Failed as expected. Error message:")
+                print(str(err)) #raise
             else:
-                print("Test Failed unexpectedly\n")
-                print(err)
-        except Exception as err:
-                print("unexpected error\n")
-                print(err)
+                print("Test Failed unexpectedly. Error message:")
+                print(str(err)) #raise
         else: # if no exceptions
             print("Test Succeeded")
 
