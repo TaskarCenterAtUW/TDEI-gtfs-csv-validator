@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tdei_gtfs_csv_validator"
-version = "0.0.21" # 21 misc fixes
+version = "0.0.22" # 22 misc fixes
 authors = [
   { name="Kristin Ann", email="katuw@uw.edu" },
 ]
