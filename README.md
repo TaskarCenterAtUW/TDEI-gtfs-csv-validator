@@ -22,7 +22,7 @@ Parameters to test_release are:
 Test files are provided in the test_files directory which can be used for referece or in testing the script below.
 
 ## Testing the script
-This package contains a set of tests to test the script. There are two primary sets of tests - tests to test flex releases (test_flex.py) and tests to test pathways releases (test_pathways.py). These tests use the files which can be found in the test_files subdirectory of the tests directory. You can run without modification or modify to test different files.  
+Tests for the scripts are available in the github repo. There are two primary sets of tests - tests to test flex releases (test_flex.py) and tests to test pathways releases (test_pathways.py). These tests use the files which can be found in the test_files subdirectory of the tests directory. You can run without modification or modify to test different files.  
 
 ## Code structure
 The structure is that the gtfs csv files are read into a sqlite database - the load into
@@ -36,7 +36,7 @@ To add a flex or pathways release to be used to test the script (note a release 
 ### Adding a new rule to be tested 
 To add a new rule to be tested test - for example - if you want to add a new pathways or flex requirement, go rules and edit the appropriate file and add a rule name, a message to be printed when the test fails and a sql query for the test. The sql query should be written so that if the sql query returns anything other than 'None' the test will be marked as failing.
 
-### Adding a new type of file to be tested
+### Adding a new type of file to ber tested
 If you wish to add a new flex or pathways file type to be tested - the current code tests only the Flex and Pathways-specific files, so tests for other files in the GTFS spec need to be added. To do so, go to the gtfs_flex or gtfs_pathways directory in the schemas directory and add a file describing the new file. Columns you will need are are: FieldName, Type, Required (from GTFS spec), sqliteType. FieldName, Type and Required are to be taken from the GTFS spec, the sqliteType is a string that creates an attribute of the appropriate type in sqllite
 
 
