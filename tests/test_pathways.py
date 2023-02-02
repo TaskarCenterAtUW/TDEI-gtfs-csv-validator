@@ -29,8 +29,9 @@ schema_version = 'v1.0'
 #test_dirs = ['tests/test_files/gtfs_pathways/v1.0/fail_schema_1']
 #test_dirs = ['tests/test_files/gtfs_pathways/v1.0/mbta_20220920_small']
 #test_dirs = ['tests/test_files/gtfs_pathways/v1.0/mbta_20220920']
-test_dirs = ['tests/test_files/gtfs_pathways/v1.0/fail_rules_1']
+#test_dirs = ['tests/test_files/gtfs_pathways/v1.0/fail_rules_1']
+test_files = ['tests/test_files/gtfs_pathways/v1.0/fail_rules_1.zip']
 
-test_support.test_dir(data_type, schema_version, test_dirs)
+test_support.test_dir(data_type, schema_version, test_files)
 
 

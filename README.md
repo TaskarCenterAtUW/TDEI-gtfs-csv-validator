@@ -7,23 +7,22 @@ is a set of GTFS files. This code will test GTFS-Flex and GTFS-Pathways
 releases. The tests focus on the flex- and pathways-specific files (for now).
 
 ### Using the test_release function
-Call the test_release function to test a GTFS release. Currently, the GTFS release is
-expected to be a directory which contains the flex or pathways release.  
-For pathways, the script expects the release to contain levels, pathways and stops files.
-For flex, the script expects the release to contain booking_rules, location_groups and stop_times files.
+Call the test_release function to test a GTFS release. The GTFS release is
+expected to be a directory which contains the flex or pathways release files
+or a zip file containing the release.  
+For pathways, the script expects the release to contain levels, pathways and stops files. For flex, the script expects the release to contain booking_rules, location_groups and stop_times files.
 
-To validate your own release, put the files for the release that you want to validate in a directory and then 
-run test_release. Note: for now input is a directory, will be updated to be a zip file sometime.
+To validate your own release, put the files for the release that you want to validate in a directory or zip file and then use test_release as follows:
 
 Parameters to test_release are:
-    data_type = 'gtfs_pathways' (or 'gtfs_flex' )
-    schema_version = 'v1.0' (for pathways) (or 'v2.0' for flex)
-    dir_path = path to directory where the files in the release are
+    data_type = 'gtfs_pathways' or 'gtfs_flex' 
+    schema_version = 'v1.0' (for pathways) or 'v2.0' (for flex)
+    input_path = path to directory or zip file containing the release 
 
 Test files are provided in the test_files directory which can be used for referece or in testing the script below.
 
 ## Testing the script
-This package contains a set of tests to test the script. There are two primary sets of tests - tests to test flex releases (test_flex.py) and tests to test pathways releases (test_pathways.py). These tests use the files which can be found in the test_files subdirectory of the tests directory. You can run various tests by changing Execute either of those files (without modification) to run those tests. 
+This package contains a set of tests to test the script. There are two primary sets of tests - tests to test flex releases (test_flex.py) and tests to test pathways releases (test_pathways.py). These tests use the files which can be found in the test_files subdirectory of the tests directory. You can run without modification or modify to test different files.  
 
 ## Code structure
 The structure is that the gtfs csv files are read into a sqlite database - the load into

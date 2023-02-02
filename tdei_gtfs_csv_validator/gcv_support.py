@@ -72,7 +72,7 @@ def create_schema_tables(data_type, schema_version, con):
     gcv_debug("schema_tables created")
 
 def check_schema(file_path, schema_table, file_table, con):
-    gcv_debug("Checking schema: " + file_path)
+    gcv_debug("Checking schema: " + str(file_path))
 
     # load pathways, flex file into table...
     # file_table contains the data from the csv file to be checked
@@ -120,12 +120,12 @@ def check_schema(file_path, schema_table, file_table, con):
     except (sql.IntegrityError, sql.DataError) as err:
         ## TODO Raise schema check failed error with whatever part of error as error msg
         fail = True
-        err_msg += "Schema check failed on: " + file_path + " Error: " + str(err) + "\n\n" 
+        err_msg += "Schema check failed on: " + str(file_path) + " Error: " + str(err) + "\n\n" 
     except sql.Error as err:
         fail = True
-        err_msg += "Unexpected SQL error on: " + file_path + " Error: " + str(err) + "\n\n" 
+        err_msg += "Unexpected SQL error on: " + str(file_path) + " Error: " + str(err) + "\n\n" 
 
-    gcv_debug("finished checking schema on " + file_path + " result " + str(fail))
+    gcv_debug("finished checking schema on " + str(file_path) + " result " + str(fail))
 
     if(fail == True):
         raise gcvex.GCVSchemaTestError(err_msg)
@@ -157,11 +157,11 @@ def check_rules(data_type, schema_version, con, dir_path):
             cur.execute(rule_sql) 
         except (sql.IntegrityError, sql.DataError) as err: #TODO - which errors?
             fail = True
-            err_msg += "Rules check failed on: " + dir_path + " Error: " + str(err) + "\n\n" 
+            err_msg += "Rules check failed on: " + str(dir_path) + " Error: " + str(err) + "\n\n" 
             # continue if we get an expected sql error - indicates test failed
         except sql.Error as err:
             fail = True
-            err_msg += "Unexpected SQL error on: " + dir_path + " Error: " + str(err) + "\n\n" 
+            err_msg += "Unexpected SQL error on: " + str(dir_path) + " Error: " + str(err) + "\n\n" 
             raise # raise if we get an unexpected sql error - indicates code issue
             
         row = cur.fetchone()
@@ -203,8 +203,8 @@ def drop_all_tables(data_type, con):
     for table_name in table_names:
         cur.execute("drop table " + table_name)
     
-def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
-    gcv_debug("Testing geojson file: " + ifile_name)
+def check_locations_geojson(data_type, schema_version, ifile_path):
+    gcv_debug("Testing geojson file: " + ifile_path)
         
     if(len(tdei_gtfs_csv_validator.__path__) !=1):
         raise Exception("unexpected path length in gcv_support")
@@ -219,7 +219,7 @@ def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
     jsonschema_file.close()
     gcv_debug(locations_schema,2)
 
-    ifile_path = idir_path + "/" + ifile_name 
+    ifile_path 
     ijsonschema_file = open(ifile_path, "r")
     locations_instance = json.load(ijsonschema_file)
     ijsonschema_file.close()
@@ -228,39 +228,38 @@ def check_locations_geojson(data_type, schema_version, idir_path, ifile_name):
         jsvalidate(locations_instance, locations_schema)
     
     except Exception as err:
-        raise gcvex.GCVGeoJsonCheckError("test schema check on locations.geojson failed in dir " + idir_path + "\n\n")
+        raise gcvex.GCVGeoJsonCheckError("test schema check on locations.geojson failed on: " + str(ifile_path) + "\n")
     else:
         gcv_debug("flex locations geojson test succeeded")
 
 
-def test_csv_file(data_type,file_name,dir_path,con):
-    gcv_debug("Testing csv file: " + file_name)
+def test_csv_file(data_type,file_path,con):
+    gcv_debug("Testing csv file: " + str(file_path))
     # data_type is pathways, or flex 
     if(data_type == 'gtfs_pathways'):
-        if(re.search('levels', file_name, re.IGNORECASE) != None):  
+        if(re.search('levels', file_path.name, re.IGNORECASE) != None):  
             schema_table = 'levels'
             file_table = 'levels_file'
-        elif(re.search('pathways', file_name, re.IGNORECASE) != None):  
+        elif(re.search('pathways', file_path.name, re.IGNORECASE) != None):  
             schema_table = 'pathways'
             file_table = 'pathways_file'
-        elif(re.search('stops', file_name, re.IGNORECASE) != None):  
+        elif(re.search('stops', file_path.name, re.IGNORECASE) != None):  
             schema_table = 'stops'
             file_table = 'stops_file'
     elif(data_type == 'gtfs_flex'):
-        if(re.search('booking_rules', file_name, re.IGNORECASE) != None):  
+        if(re.search('booking_rules', file_path.name, re.IGNORECASE) != None):  
             schema_table = 'booking_rules'
             file_table = 'booking_rules_file'
-        elif(re.search('location_groups', file_name, re.IGNORECASE) != None):  
+        elif(re.search('location_groups', file_path.name, re.IGNORECASE) != None):  
             schema_table = 'location_groups'
             file_table = 'location_groups_file'
-        elif(re.search('stop_times', file_name, re.IGNORECASE) != None):  
+        elif(re.search('stop_times', file_path.name, re.IGNORECASE) != None):  
             schema_table = 'stop_times'
             file_table = 'stops_times_file'
     else:
-        raise gcvex.GCVUnexpectedDataTypeError('data_type')
+        raise gcvex.GCVUnexpectedDataTypeError(data_type)
         
     # file_path, data_type, con
-    file_path = dir_path + '/' + file_name
     check_schema(file_path, schema_table, file_table, con)
 
 # debug_log function provides internal support for debugging for the gcv
