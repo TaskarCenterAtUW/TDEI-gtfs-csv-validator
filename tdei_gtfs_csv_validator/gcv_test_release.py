@@ -76,25 +76,23 @@ def test_release(data_type, schema_version, input_path):
 
         gcvsup.check_rules(data_type, schema_version, con, dir_path)
 
-    except Exception as err:   
-        # clean up
-        gcvsup.drop_all_tables(data_type, con)
-        con.close()
-        if(extracted):
-            for child in dir_path.iterdir():
-                child.unlink()
-            dir_path.rmdir() # TODO rmdir not working
+    except gcvex.GCVError as err:   
+        clean_up(data_type, con, extracted,dir_path) 
+        raise gcvex.GCVError(str(err))
+    except Exception as err:
+        clean_up(data_type, con, extracted,dir_path) 
         raise 
     else:
-        # clean up
-        gcvsup.drop_all_tables(data_type, con)
-        con.close()
-        if(extracted):
-            for child in dir_path.iterdir():
-                child.unlink()
-            dir_path.rmdir() # TODO rmdir not working
-
+        clean_up(data_type, con, extracted,dir_path) 
     
+def clean_up(data_type, con, extracted,dir_path): 
+    gcvsup.drop_all_tables(data_type, con)
+    con.close()
+    if(extracted):
+        for child in dir_path.iterdir():
+            child.unlink()
+        dir_path.rmdir() # TODO rmdir not working
+
 def test_file(data_type, schema_version, file_path, con):
 
     if fnmatch.fnmatch(file_path.name, "*.txt"):
