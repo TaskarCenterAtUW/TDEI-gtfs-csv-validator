@@ -9,7 +9,8 @@ import test_support
 # data_type = 'gtfs_flex' to test flex
 # schema_version = version of schema to be tested against 
 #        use v1.0 for pathways tests or v2.0 for flex tests
-# test_dirs = a list of directories to be tested, each directory 
+# test_paths = a list of paths to be tested, each path is expect to be
+#             a directory or zipfile. The directory or zipfile 
 #             is expected to contain a release for the data_type 
 #             specified. gtfs_pathways expects levels, pathways and 
 #             stops files. gtfs_flex expects booking_rules, loction_groups
@@ -19,8 +20,15 @@ import test_support
 data_type = 'gtfs_flex' 
 schema_version = 'v2.0' 
 
-test_dirs = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs']
-#test_dirs = ['tests/test_files/gtfs_flex/v2.0/fail_schema_1']
+test_paths = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs',
+              'tests/test_files/gtfs_flex/v2.0/fail_schema_1',
+              'tests/test_files/gtfs_flex/v2.0/success_1_all_attrs.zip',
+              'tests/test_files/gtfs_flex/v2.0/fail_schema_1.zip']
 
-test_support.test_dir(data_type, schema_version, test_dirs)
+#test_paths = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs']
+#test_paths = ['tests/test_files/gtfs_flex/v2.0/fail_schema_1']
+#test_paths = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs.zip']
+#test_paths = ['tests/test_files/gtfs_flex/v2.0/fail_schema_1.zip']
+
+test_support.test_releases(data_type, schema_version, test_paths)
 

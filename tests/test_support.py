@@ -13,25 +13,30 @@ import re as re
 from tdei_gtfs_csv_validator import gcv_test_release
 from tdei_gtfs_csv_validator import exceptions as gcvex 
 
-def test_dir(data_type, schema_version, test_dirs):
+def test_releases(data_type, schema_version, test_paths):
 
-    for dir_path in test_dirs:  
-        print("Calling run_tests on " + dir_path)
+    count_int = 1
+    for test_path in test_paths:
+        count = str(count_int)  
+        print("BEGIN TEST " + count + ": Calling run_tests on " + str(test_path))
         expect_success = True
-        if(re.search('Fail', dir_path, re.IGNORECASE) != None):
+        if(re.search('Fail', test_path, re.IGNORECASE) != None):
             expect_success = False; # if Fail, fail, or FAIL in file name
     
         try:
-            gcv_test_release.test_release(data_type, schema_version, dir_path)
+            gcv_test_release.test_release(data_type, schema_version, test_path)
         except gcvex.GCVError as err:
             if expect_success == False:
-                print("Test Failed as expected. Error message:")
+                print("END TEST " + count + ": Test Failed as expected. Error message:")
                 print(str(err)) #raise
+                print("\n")
             else:
-                print("Test Failed unexpectedly. Error message:")
+                print("END TEST " + count + ": Test Failed unexpectedly. Error message:")
                 print(str(err)) #raise
+                print("\n")
         else: # if no exceptions
-            print("Test Succeeded")
+            print("END TEST " + count + ": Test Succeeded\n\n")
+        count_int = count_int + 1
 
 
 # this function takes the name of the test and the file name and

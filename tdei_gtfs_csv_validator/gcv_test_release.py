@@ -58,8 +58,6 @@ def test_release(data_type, schema_version, input_path):
         fail = False
         error_log = ''
         for file_path in dir_path.iterdir():
-            print("DIRPATH:" + str(dir_path))
-            print("TESTING" + str(file_path))
             try:
                 test_file(data_type, schema_version, file_path, con)
             except (gcvex.GCVSchemaTestError, gcvex.GCVGeoJsonCheckError) as err:
@@ -85,9 +83,8 @@ def test_release(data_type, schema_version, input_path):
         if(extracted):
             for child in dir_path.iterdir():
                 child.unlink()
-            dir_path.rmdir()
-        # raise a GCVError here to avoid exposing traceback
-        raise gcvex.GCVError(str(err))
+            dir_path.rmdir() # TODO rmdir not working
+        raise 
     else:
         # clean up
         gcvsup.drop_all_tables(data_type, con)
@@ -95,10 +92,9 @@ def test_release(data_type, schema_version, input_path):
         if(extracted):
             for child in dir_path.iterdir():
                 child.unlink()
-            dir_path.rmdir()
+            dir_path.rmdir() # TODO rmdir not working
 
     
-
 def test_file(data_type, schema_version, file_path, con):
 
     if fnmatch.fnmatch(file_path.name, "*.txt"):

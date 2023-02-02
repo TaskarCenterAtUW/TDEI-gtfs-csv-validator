@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tdei_gtfs_csv_validator"
-version = "0.0.20" # 20 fix for local tests and misc updates
+version = "0.0.21" # 21 misc fixes
 authors = [
   { name="Kristin Ann", email="katuw@uw.edu" },
 ]
@@ -20,12 +20,3 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/TaskarCenterAtUW/TDEI-gtfs-csv-validator"
 
-# this stuff was causing the validator not to be able to be imported
-# src/tdei_gtfs_csv_validator/*.py failed too...
-# "tdei_gtfs_csv_validator/*.py" failed too
-# *.py failed too, but I notice that rules, schemas and tests are getting included
-#[tool.hatch.build]
-#include = [
-#  "/tdei_gtfs_csv_validator",
-#  "/tests"
-#]

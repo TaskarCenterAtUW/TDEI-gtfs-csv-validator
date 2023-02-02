@@ -204,7 +204,7 @@ def drop_all_tables(data_type, con):
         cur.execute("drop table " + table_name)
     
 def check_locations_geojson(data_type, schema_version, ifile_path):
-    gcv_debug("Testing geojson file: " + ifile_path)
+    gcv_debug("Testing geojson file: " + str(ifile_path))
         
     if(len(tdei_gtfs_csv_validator.__path__) !=1):
         raise Exception("unexpected path length in gcv_support")
