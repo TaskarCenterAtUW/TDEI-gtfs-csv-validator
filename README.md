@@ -8,7 +8,11 @@ cd your-folder-name
 source bin/activate
 
 Then install the package from test pypi:
-python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps TDEI-gtfs-csv-validator
+python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps TDEI-gtfs-csv-validator==0.0.26
+
+you should get version 0.0.26
+
+also: https://test.pypi.org/project/tdei-gtfs-csv-validator/0.0.26/
 
 install dependencies:
 I could not get pip to install dependencies, so grab requirements.txt from the github repo and use pip
@@ -36,6 +40,14 @@ Sample good and bad GTFS-Pathways and GTFS-Flex files can be found in the projec
 github repo in tests/test_files. Here is a link to some pathways files:
 
 https://github.com/TaskarCenterAtUW/TDEI-gtfs-csv-validator/tree/master/tests/test_files/gtfs_pathways/v1.0
+
+Suggest:
+mkdir test_dir
+cd test_dir
+copy the code below into a file example_use.py
+download a pathways release (directory or zip file from the above)
+replace placeholder in code with path to the release you just downloaded
+python3 example_use.py to run it
 
 ## simple example of the use of the gcv validator
 
@@ -85,7 +97,7 @@ Tests for the scripts are available in the github repo. There are two primary se
 clone from this repo: https://github.com/TaskarCenterAtUW/TDEI-gtfs-csv-validator
 create and activate a virtual environment
 install dependencies from requirements.txt
-then run either test_flex.py or test_pathways.py - they should run without modification
+then run either test_flex.py or test_pathways.py - they should run without modification - they are a bit finicky about what directory you run them from, but other than that should work
 
 ## Code structure
 The structure is that the gtfs csv files are read into a sqlite database - the load into
