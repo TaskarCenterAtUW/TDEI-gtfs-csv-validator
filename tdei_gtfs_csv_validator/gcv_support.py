@@ -201,7 +201,11 @@ def drop_all_tables(data_type, con):
         raise gcvex.GCVUnexpectedDataTypeError(data_type)
     
     for table_name in table_names:
-        cur.execute("drop table " + table_name)
+        try:
+            cur.execute("drop table " + table_name)
+        except sql.OperationalError as err:
+            # skip tables not found error
+            pass
     
 def check_locations_geojson(data_type, schema_version, ifile_path):
     gcv_debug("Testing geojson file: " + str(ifile_path))

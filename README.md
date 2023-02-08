@@ -1,9 +1,60 @@
 This package can be used to validate GTFS CSV files. It is
 focused on GTFS-Pathways and GTFS-Flex files. 
 
+## Installing the Package
+First, create and activate a virtual environment:
+python3 -m venv your-folder-name
+cd your-folder-name
+source bin/activate
+
+Then install the package from test pypi:
+python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps TDEI-gtfs-csv-validator
+
+install dependencies:
+
+
+Package is now installed.
+
 ## Using tdei_gtfs_csv_validator
 The primary function in this package is test_release. A GTFS release
 is a set of GTFS files. This code will test GTFS-Flex and GTFS-Pathways
+releases. The tests focus on the flex- and pathways-specific files (for now).
+
+### Summary
+The primary function in this package is test_release. An example of using
+this function is provided in the file example_use.py which is included in the release.
+Replace the placedholder with a path to a directory or zip file containing a GTFS
+release and run the script. The code from this script is below as well.
+
+Sample good and bad GTFS-Pathways and GTFS-Flex files can be found in the project
+github repo in tests/test_files. Here is a link to some pathways files:
+
+https://github.com/TaskarCenterAtUW/TDEI-gtfs-csv-validator/tree/master/tests/test_files/gtfs_pathways/v1.0
+
+## simple example of the use of the gcv validator
+
+example_use.py
+
+from tdei_gtfs_csv_validator import gcv_test_release
+from tdei_gtfs_csv_validator import exceptions as gcvex
+
+data_type = 'gtfs_pathways'
+schema_version = 'v1.0'
+path = 'PUT PATH TO ZIP FILE OR DIRECTORY HERE'
+
+print("simple_test: trying calling test_release")
+
+try:
+    gcv_test_release.test_release(data_type, schema_version, path)
+except gcvex.GCVError as err:
+    print("Test Failed\n")
+    print(err)
+else: # if no exceptions
+    print("Test Succeeded")
+
+
+## Details
+A GTFS releaseis a set of GTFS files. This code will test GTFS-Flex and GTFS-Pathways
 releases. The tests focus on the flex- and pathways-specific files (for now).
 
 ### Using the test_release function
@@ -23,6 +74,12 @@ Test files are provided in the test_files directory which can be used for refere
 
 ## Testing the script
 Tests for the scripts are available in the github repo. There are two primary sets of tests - tests to test flex releases (test_flex.py) and tests to test pathways releases (test_pathways.py). These tests use the files which can be found in the test_files subdirectory of the tests directory. You can run without modification or modify to test different files.  
+
+###To use the tests:
+clone from this repo: https://github.com/TaskarCenterAtUW/TDEI-gtfs-csv-validator
+create and activate a virtual environment
+install dependencies from requirements.txt
+then run either test_flex.py or test_pathways.py - they should run without modification
 
 ## Code structure
 The structure is that the gtfs csv files are read into a sqlite database - the load into
