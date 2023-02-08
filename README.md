@@ -11,6 +11,12 @@ Then install the package from test pypi:
 python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps TDEI-gtfs-csv-validator
 
 install dependencies:
+I could not get pip to install dependencies, so grab requirements.txt from the github repo and use pip
+to install the requirements in your venv
+
+pip3 install -r requirements.txt
+
+https://github.com/TaskarCenterAtUW/TDEI-gtfs-csv-validator/blob/master/requirements.txt
 
 
 Package is now installed.
