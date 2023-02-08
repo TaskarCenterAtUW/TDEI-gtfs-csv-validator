@@ -9,7 +9,7 @@ focused on GTFS-Pathways and GTFS-Flex files.
     python3 -m venv your-folder-name  
     cd your-folder-name  
     source bin/activate  
-2. Then install the package from test pypi:
+2. Then install the package from test pypi:  
     python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps TDEI-gtfs-csv-validator==0.0.26
 
     Note you should use version 0.0.26. Info also available here: https://test.pypi.org/project/tdei-gtfs-csv-validator/0.0.26/
