@@ -120,12 +120,12 @@ def check_schema(file_path, schema_table, file_table, con):
     except (sql.IntegrityError, sql.DataError) as err:
         ## TODO Raise schema check failed error with whatever part of error as error msg
         fail = True
-        err_msg += "Schema check failed on: " + str(file_path) + " Error: " + str(err) + "\n\n" 
+        err_msg += "Schema check failed on: " + str(file_path.name) + " Error: " + str(err) + "\n\n" 
     except sql.Error as err:
         fail = True
-        err_msg += "Unexpected SQL error on: " + str(file_path) + " Error: " + str(err) + "\n\n" 
+        err_msg += "Unexpected SQL error on: " + str(file_path.name) + " Error: " + str(err) + "\n\n" 
 
-    gcv_debug("finished checking schema on " + str(file_path) + " result " + str(fail))
+    gcv_debug("finished checking schema on " + str(file_path.name) + " result " + str(fail))
 
     if(fail == True):
         raise gcvex.GCVSchemaTestError(err_msg)
@@ -157,11 +157,11 @@ def check_rules(data_type, schema_version, con, dir_path):
             cur.execute(rule_sql) 
         except (sql.IntegrityError, sql.DataError) as err: #TODO - which errors?
             fail = True
-            err_msg += "Rules check failed on: " + str(dir_path) + " Error: " + str(err) + "\n\n" 
+            err_msg += "Rules check failed on: " + str(dir_path.stem) + " Error: " + str(err) + "\n\n" 
             # continue if we get an expected sql error - indicates test failed
         except sql.Error as err:
             fail = True
-            err_msg += "Unexpected SQL error on: " + str(dir_path) + " Error: " + str(err) + "\n\n" 
+            err_msg += "Unexpected SQL error on: " + str(dir_path.stem) + " Error: " + str(err) + "\n\n" 
             raise # raise if we get an unexpected sql error - indicates code issue
             
         row = cur.fetchone()
@@ -232,7 +232,7 @@ def check_locations_geojson(data_type, schema_version, ifile_path):
         jsvalidate(locations_instance, locations_schema)
     
     except Exception as err:
-        raise gcvex.GCVGeoJsonCheckError("test schema check on locations.geojson failed on: " + str(ifile_path) + "\n")
+        raise gcvex.GCVGeoJsonCheckError("test schema check on locations.geojson failed on: " + str(ifile_path.name) + "\n")
     else:
         gcv_debug("flex locations geojson test succeeded")
 
