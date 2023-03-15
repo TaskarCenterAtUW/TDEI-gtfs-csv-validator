@@ -62,7 +62,7 @@ def create_schema_tables(data_type, schema_version, con):
             if row[0] != 0:
                 create_table += ", "
             create_table += row[1] + " " + row[4]
-        create_table += ") strict;"
+        create_table += ");" # strict; // removed strict was causing issues with library version 
       
         gcv_debug("query: " + create_table,2)
         cur = con.cursor()
