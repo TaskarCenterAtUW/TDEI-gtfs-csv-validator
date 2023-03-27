@@ -18,6 +18,7 @@ def test_release(data_type, schema_version, input_path):
     try:
         dir_path = None #
         extracted = False
+        con = None
 
         # extract from zip file
         if(is_zipfile(input_path)):
@@ -86,8 +87,9 @@ def test_release(data_type, schema_version, input_path):
         clean_up(data_type, con, extracted,dir_path) 
     
 def clean_up(data_type, con, extracted,dir_path): 
-    gcvsup.drop_all_tables(data_type, con)
-    con.close()
+    if(con != None):
+        gcvsup.drop_all_tables(data_type, con)
+        con.close()
     if(extracted):
         for child in dir_path.iterdir():
             child.unlink()
