@@ -25,7 +25,8 @@ def test_release(data_type, schema_version, input_path):
             zf = ZipFile(input_path)
             temp_dir_path = Path.cwd() / 'tempdir'
             zf.extractall(temp_dir_path) # not sure if this takes a path object
-            
+            extracted = True
+                        
             # this is awkwared, but don't know how to count number of dir entries
             first = True
             for child in temp_dir_path.iterdir():
@@ -35,7 +36,7 @@ def test_release(data_type, schema_version, input_path):
                     raise gcvex.GCVError("got file not dir in tempdir, zip extraction error")
                 dir_path = child
                 first = False 
-            extracted = True
+
         else:
             # assume input is a directory
             dir_path = Path(input_path)
