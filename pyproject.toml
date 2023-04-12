@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tdei_gtfs_csv_validator"
-version = "0.0.30" # 30 moved set of extracted variable to fix bug  
+version = "0.0.31" # 31 incorporated bugfix-multi-folder 
 authors = [
   { name="Kristin Ann", email="katuw@uw.edu" },
 ]

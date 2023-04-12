@@ -94,9 +94,6 @@ def clean_up(data_type, con, extracted,dir_path):
         con.close()
     if(extracted):
         shutil.rmtree(dir_path) # remove the temp directory
-        # for child in dir_path.iterdir():
-        #     child.unlink()
-        # dir_path.rmdir() # TODO rmdir not working
 
 def test_file(data_type, schema_version, file_path, con):
 
