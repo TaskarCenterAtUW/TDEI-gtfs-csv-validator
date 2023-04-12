@@ -3,6 +3,7 @@
 import fnmatch
 import os as os
 import re as re
+import shutil
 from tdei_gtfs_csv_validator import gcv_support as gcvsup
 from tdei_gtfs_csv_validator import exceptions as gcvex
 import sqlite3 as sql 
@@ -79,22 +80,23 @@ def test_release(data_type, schema_version, input_path):
         gcvsup.check_rules(data_type, schema_version, con, dir_path)
 
     except gcvex.GCVError as err:   
-        clean_up(data_type, con, extracted,dir_path) 
+        clean_up(data_type, con, extracted,temp_dir_path) 
         raise gcvex.GCVError(str(err))
     except Exception as err:
-        clean_up(data_type, con, extracted,dir_path) 
+        clean_up(data_type, con, extracted,temp_dir_path) 
         raise 
     else:
-        clean_up(data_type, con, extracted,dir_path) 
+        clean_up(data_type, con, extracted,temp_dir_path) 
     
 def clean_up(data_type, con, extracted,dir_path): 
     if(con != None):
         gcvsup.drop_all_tables(data_type, con)
         con.close()
     if(extracted):
-        for child in dir_path.iterdir():
-            child.unlink()
-        dir_path.rmdir() # TODO rmdir not working
+        shutil.rmtree(dir_path) # remove the temp directory
+        # for child in dir_path.iterdir():
+        #     child.unlink()
+        # dir_path.rmdir() # TODO rmdir not working
 
 def test_file(data_type, schema_version, file_path, con):
 
