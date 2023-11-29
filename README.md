@@ -10,9 +10,9 @@ focused on GTFS-Pathways and GTFS-Flex files.
     cd your-folder-name  
     source bin/activate  
 2. Then install the package from test pypi:  
-    python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps TDEI-gtfs-csv-validator==0.0.26
+    python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps TDEI-gtfs-csv-validator==0.0.31
 
-    Note you should use version 0.0.26. Info also available here: https://test.pypi.org/project/tdei-gtfs-csv-validator/0.0.26/
+    Note you should use version 0.0.31. Info also available here: https://test.pypi.org/project/tdei-gtfs-csv-validator/0.0.31/
 
 3. Install dependencies
     I could not get pip to install dependencies, so:
