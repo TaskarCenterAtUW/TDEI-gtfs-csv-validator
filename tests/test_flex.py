@@ -1,6 +1,8 @@
 # test the gtfs-csv-validator with gtfs-flex files
 
 import test_support
+from tdei_gtfs_csv_validator import gcv_test_release
+from tdei_gtfs_csv_validator import exceptions as gcvex 
 
 # Use of script: Test a release - specify data_type, schema_version
 # and a (list of) test directories 
@@ -31,4 +33,6 @@ test_paths = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs',
 #test_paths = ['tests/test_files/gtfs_flex/v2.0/fail_schema_1.zip']
 
 test_support.test_releases(data_type, schema_version, test_paths)
+# test_path = 'tests/test_files/gtfs_flex/v2.0/success_2_all_attrs.zip'
+# gcv_test_release.test_release(data_type, schema_version, test_path)
 

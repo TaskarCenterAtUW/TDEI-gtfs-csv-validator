@@ -27,15 +27,15 @@ def test_releases(data_type, schema_version, test_paths):
             gcv_test_release.test_release(data_type, schema_version, test_path)
         except gcvex.GCVError as err:
             if expect_success == False:
-                print("END TEST " + count + ": Test Failed as expected. Error message:")
+                print("END TEST " + count + ": [OK] Test Failed as expected. Error message:")
                 print(str(err)) #raise
                 print("\n")
             else:
-                print("END TEST " + count + ": Test Failed unexpectedly. Error message:")
+                print("END TEST " + count + ":[FAIL] Test Failed unexpectedly. Error message:")
                 print(str(err)) #raise
                 print("\n")
         else: # if no exceptions
-            print("END TEST " + count + ": Test Succeeded\n\n")
+            print("END TEST " + count + ":[OK] Test Succeeded\n\n")
         count_int = count_int + 1
 
 
