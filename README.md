@@ -91,6 +91,7 @@ Tests for the scripts are available in the github repo. There are two primary se
 2. create and activate a virtual environment
 3. install dependencies from requirements.txt
 4. then run either test_flex.py or test_pathways.py - they should run without modification - they are a bit finicky about what directory you run them from, but other than that should work - the need to be run from the dir above the tests directory (I believe)
+5. To run the unit test cases `python -m unittest tests/test_gcv_test_release.py`
 
 ## Code structure
 The structure is that the gtfs csv files are read into a sqlite database - the load into

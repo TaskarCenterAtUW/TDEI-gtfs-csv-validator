@@ -20,6 +20,7 @@ def test_release(data_type, schema_version, input_path):
         dir_path = None #
         extracted = False
         con = None
+        temp_dir_path = None
 
         # extract from zip file
         if(is_zipfile(input_path)):
@@ -35,8 +36,9 @@ def test_release(data_type, schema_version, input_path):
                     raise gcvex.GCVError("too many files in tempdir, zip extraction error") 
                 if(child.is_dir() == False):
                     raise gcvex.GCVError("got file not dir in tempdir, zip extraction error")
-                dir_path = child
-                first = False 
+                if(child.name != '__MACOSX'):
+                    dir_path = child
+                    first = False 
 
         else:
             # assume input is a directory
@@ -86,7 +88,8 @@ def test_release(data_type, schema_version, input_path):
         clean_up(data_type, con, extracted,temp_dir_path) 
         raise 
     else:
-        clean_up(data_type, con, extracted,temp_dir_path) 
+        if temp_dir_path != None:
+            clean_up(data_type, con, extracted,temp_dir_path) 
     
 def clean_up(data_type, con, extracted,dir_path): 
     if(con != None):
@@ -104,6 +107,11 @@ def test_file(data_type, schema_version, file_path, con):
     elif(data_type == 'gtfs_flex' and fnmatch.fnmatch(file_path.name, "*.geojson")):
         # check the geojson file for flex
         gcvsup.check_locations_geojson(data_type, schema_version, file_path)
+    elif(fnmatch.fnmatch(file_path.name, ".*")):
+        gcvsup.gcv_log("skipping file: " + str(file_path))
+    # ignore files with no extension
+    elif(fnmatch.fnmatch(file_path.name, "__*")):
+        gcvsup.gcv_log("skipping file: " + str(file_path))
     else:
         raise gcvex.GCVError("unexpected file type - expect .txt or .geojson files (flex only), please be sure to specify the directory containing the release. error from:" + str(file_path))
 
