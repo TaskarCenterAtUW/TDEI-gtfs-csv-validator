@@ -1,39 +1,58 @@
-# This workflow will upload a Python Package using Twine when a release is created
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Upload Python Package
-
+name: Check and Publish to PyPi
 on:
-  release:
-    types: [published]
-
-permissions:
-  contents: read
+  push:
+    tags:
+      - '*.*.*' # Eg. 0.0.1
+  workflow_dispatch:
 
 jobs:
-  deploy:
-
+  PublishToPyPi:
+    environment:
+      name: Production
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build
-    - name: Build package
-      run: python -m build
-    - name: Publish package
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Installing python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Installing git
+        run: pip install gitpython
+
+      - name: Installing Packages
+        run: pip install -r requirements.txt
+
+      - name: Generate local version
+        run: python freeze_version.py
+
+      - name: Fetch local package version
+        run: |
+          packageLocalVersion=$(python -c 'from version import version; print(version);')
+          echo "localVersion=$packageLocalVersion" >> $GITHUB_ENV
+
+      - name: Fetch remote package version
+        run: |
+          packageRemoteVersion=$(python -c "exec(\"import pkg_resources\\ntry:  print(pkg_resources.get_distribution('tcat-gtfs-csv-validator').version)\\nexcept pkg_resources.DistributionNotFound:  print('0.0.0');\")")
+          echo "remoteVersion=$packageRemoteVersion" >> $GITHUB_ENV
+
+      - name: Printing local and remote versions
+        run: echo "Local version ${{env.localVersion}} and remote version ${{env.remoteVersion}}"
+
+      - name: Compare local and remote version with dpkg
+        run: dpkg --compare-versions ${{env.localVersion}} "gt" ${{env.remoteVersion}}
+
+
+      - name: Setup python wheel
+        run: pip install wheel
+
+      - name: Building Package
+        run: python setup.py bdist_wheel
+
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+

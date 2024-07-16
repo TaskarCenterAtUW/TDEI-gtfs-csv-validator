@@ -5,3 +5,4 @@ dist/
 tempdir/
 .venv/
 .DS_Store
+build/
