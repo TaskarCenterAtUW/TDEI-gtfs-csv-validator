@@ -27,12 +27,5 @@ test_paths = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs',
               'tests/test_files/gtfs_flex/v2.0/success_1_all_attrs.zip',
               'tests/test_files/gtfs_flex/v2.0/fail_schema_1.zip']
 
-#test_paths = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs']
-#test_paths = ['tests/test_files/gtfs_flex/v2.0/fail_schema_1']
-#test_paths = ['tests/test_files/gtfs_flex/v2.0/success_1_all_attrs.zip']
-#test_paths = ['tests/test_files/gtfs_flex/v2.0/fail_schema_1.zip']
-
 test_support.test_releases(data_type, schema_version, test_paths)
-# test_path = 'tests/test_files/gtfs_flex/v2.0/success_2_all_attrs.zip'
-# gcv_test_release.test_release(data_type, schema_version, test_path)
 

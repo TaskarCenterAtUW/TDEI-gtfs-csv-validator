@@ -29,16 +29,6 @@ test_paths = ['tests/test_files/gtfs_pathways/v1.0/success_1_all_attrs',
               'tests/test_files/gtfs_pathways/v1.0/success_1_all_attrs.zip',
               'tests/test_files/gtfs_pathways/v1.0/fail_rules_1.zip']
 
-
-#test_paths = ['tests/test_files/gtfs_pathways/v1.0/success_1_all_attrs']
-#test_paths = ['tests/test_files/gtfs_pathways/v1.0/success_2_missing_attrs']
-#test_paths = ['tests/test_files/gtfs_pathways/v1.0/fail_schema_1']
-#test_paths = ['tests/test_files/gtfs_pathways/v1.0/mbta_20220920_small']
-#test_paths = ['tests/test_files/gtfs_pathways/v1.0/mbta_20220920']
-#test_paths = ['tests/test_files/gtfs_pathways/v1.0/fail_rules_1']
-#test_paths = ['tests/test_files/gtfs_pathways/v1.0/success_1_all_attrs.zip']
-#test_paths = ['tests/test_files/gtfs_pathways/v1.0/fail_rules_1.zip']
-
 test_support.test_releases(data_type, schema_version, test_paths)
 
 

@@ -9,7 +9,6 @@ from tdei_gtfs_csv_validator import exceptions as gcvex
 import sqlite3 as sql 
 from zipfile import is_zipfile
 from zipfile import ZipFile
-import zipfile
 from pathlib import Path
 
 def test_release(data_type, schema_version, input_path):
