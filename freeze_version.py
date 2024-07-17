@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-# import git
+import git
 from datetime import date
 from tdei_gtfs_csv_validator.version import __version__
 
