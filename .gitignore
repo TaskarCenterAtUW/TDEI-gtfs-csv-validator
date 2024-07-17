@@ -5,3 +5,6 @@ dist/
 tempdir/
 .venv/
 .DS_Store
+build/
+tcat_gtfs_csv_validator.egg-info
+tdei_gtfs_csv_validator.egg-info

@@ -10,9 +10,9 @@ focused on GTFS-Pathways and GTFS-Flex files.
     cd your-folder-name  
     source bin/activate  
 2. Then install the package from test pypi:  
-    python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps TDEI-gtfs-csv-validator==0.0.31
+    python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps tcat-gtfs-csv-validator==0.0.32
 
-    Note you should use version 0.0.31. Info also available here: https://test.pypi.org/project/tdei-gtfs-csv-validator/0.0.31/
+    Note you should use version 0.0.31. Info also available here: https://test.pypi.org/project/tcat-gtfs-csv-validator/0.0.32/
 
 3. Install dependencies
     I could not get pip to install dependencies, so:
@@ -45,8 +45,8 @@ github repo in tests/test_files.
 
 ### Example code
 ```python
-from tdei_gtfs_csv_validator import gcv_test_release  
-from tdei_gtfs_csv_validator import exceptions as gcvex
+from tcat_gtfs_csv_validator import gcv_test_release  
+from tcat_gtfs_csv_validator import exceptions as gcvex
 
 data_type = 'gtfs_pathways' 
 schema_version = 'v1.0' 
@@ -65,7 +65,7 @@ else: # if no exceptions
 
 # Some more details
 
-A GTFS releaseis a set of GTFS files. This code will test GTFS-Flex and GTFS-Pathways
+A GTFS release is a set of GTFS files. This code will test GTFS-Flex and GTFS-Pathways
 releases. The tests focus on the flex- and pathways-specific files (for now).
 
 ## Using the test_release function
@@ -106,7 +106,7 @@ To add a flex or pathways release to be used to test the script (note a release 
 
 ### Adding a new rule to be tested 
 
-To add a new rule to be tested test - for example - if you want to add a new pathways or flex requirement, go rules and edit the appropriate file and add a rule name, a message to be printed when the test fails and a sql query for the test. The sql query should be written so that if the sql query returns anything other than 'None' the test will be marked as failing.
+To add a new rule to be tested - for example - if you want to add a new pathways or flex requirement, go rules and edit the appropriate file and add a rule name, a message to be printed when the test fails and a sql query for the test. The sql query should be written so that if the sql query returns anything other than 'None' the test will be marked as failing.
 
 ### Adding a new type of file to ber tested
 
