@@ -36,6 +36,14 @@ setup(
     python_requires='>=3.10',
     package_dir={'tcat_gtfs_csv_validator': 'tcat_gtfs_csv_validator'},
     package_data={
-        'tcat_gtfs_csv_validator': ['schemas/*', 'rules/*'],
+        'tcat_gtfs_csv_validator': [
+            'schemas/*',
+            'schemas/gtfs_flex/*',
+            'schemas/gtfs_flex/v2.0/*',
+            'schemas/gtfs_pathways/*',
+            'schemas/gtfs_pathways/v1.0/*',
+            'rules/*',
+        ],
     },
+    include_package_data=True,
 )

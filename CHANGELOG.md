@@ -1,3 +1,8 @@
+# 0.0.38
+
+- Schema folder is not getting added to package, fixed that issue
+- Updated version to 0.0.38
+
 # 0.0.37
 
 - Added rules and schemas directory to the package folder

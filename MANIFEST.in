@@ -1,0 +1,2 @@
+recursive-include tcat_gtfs_csv_validator/schemas *
+recursive-include tcat_gtfs_csv_validator/rules *
