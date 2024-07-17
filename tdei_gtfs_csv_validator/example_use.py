@@ -1,7 +1,7 @@
 # simple example of the use of the gcv validator
  
-from tdei_gtfs_csv_validator import gcv_test_release
-from tdei_gtfs_csv_validator import exceptions as gcvex 
+import gcv_test_release
+import exceptions as gcvex
 
 data_type = 'gtfs_pathways'
 schema_version = 'v1.0'

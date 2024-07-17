@@ -1,3 +1,7 @@
+# 0.0.35
+
+- Fixed relative path issue
+
 # 0.0.34
 
 - Add support to run on python 3.10 and above
