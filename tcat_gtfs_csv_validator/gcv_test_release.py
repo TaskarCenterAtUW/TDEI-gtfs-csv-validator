@@ -4,8 +4,8 @@ import fnmatch
 import os as os
 import re as re
 import shutil
-from tdei_gtfs_csv_validator import gcv_support as gcvsup
-from tdei_gtfs_csv_validator import exceptions as gcvex
+from tcat_gtfs_csv_validator import gcv_support as gcvsup
+from tcat_gtfs_csv_validator import exceptions as gcvex
 import sqlite3 as sql 
 from zipfile import is_zipfile
 from zipfile import ZipFile
