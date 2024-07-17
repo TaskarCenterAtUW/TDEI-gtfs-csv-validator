@@ -33,6 +33,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.11',
+    python_requires='>=3.10',
     package_dir={'tcat_gtfs_csv_validator': 'tdei_gtfs_csv_validator'},
 )
