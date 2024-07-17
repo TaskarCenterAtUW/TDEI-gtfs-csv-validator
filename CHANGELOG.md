@@ -1,3 +1,8 @@
+# 0.0.37
+
+- Added rules and schemas directory to the package folder
+
+
 # 0.0.36
 
 - Added Unit test cases
