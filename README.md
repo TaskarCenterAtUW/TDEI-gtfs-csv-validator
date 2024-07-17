@@ -22,7 +22,7 @@ focused on GTFS-Pathways and GTFS-Flex files.
 
 4. Package is now installed.
 
-# Using tdei_gtfs_csv_validator
+# Using tcat_gtfs_csv_validator
 The primary function in this package is test_release. A GTFS release
 is a set of GTFS files. This code will test GTFS-Flex and GTFS-Pathways
 releases. 
