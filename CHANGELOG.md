@@ -1,4 +1,4 @@
-# 0.0.32
+# 0.0.36
 
 - Added Unit test cases
 - Added Pipeline to deploy to TestPYPI
