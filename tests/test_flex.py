@@ -1,8 +1,8 @@
 # test the gtfs-csv-validator with gtfs-flex files
 
 import test_support
-from tdei_gtfs_csv_validator import gcv_test_release
-from tdei_gtfs_csv_validator import exceptions as gcvex 
+from tcat_gtfs_csv_validator import gcv_test_release
+from tcat_gtfs_csv_validator import exceptions as gcvex
 
 # Use of script: Test a release - specify data_type, schema_version
 # and a (list of) test directories 

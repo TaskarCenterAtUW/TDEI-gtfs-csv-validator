@@ -10,8 +10,8 @@ mod_path = cur_path.parents[1]
 sys.path.append(str(mod_path))
 
 import re as re
-from tdei_gtfs_csv_validator import gcv_test_release
-from tdei_gtfs_csv_validator import exceptions as gcvex 
+from tcat_gtfs_csv_validator import gcv_test_release
+from tcat_gtfs_csv_validator import exceptions as gcvex
 
 def test_releases(data_type, schema_version, test_paths):
 

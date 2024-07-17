@@ -10,8 +10,8 @@ from jsonschema import validate as jsvalidate
 import json
 from pathlib import Path
 
-import tdei_gtfs_csv_validator # need to get module path, maybe there is a better way...
-from tdei_gtfs_csv_validator import exceptions as gcvex 
+import tcat_gtfs_csv_validator # need to get module path, maybe there is a better way...
+from tcat_gtfs_csv_validator import exceptions as gcvex
 
 # Uses: https://github.com/python-jsonschema/jsonschema
 
@@ -39,10 +39,10 @@ def csv_to_table(file_name, table_name, con):
 def create_schema_tables(data_type, schema_version, con):
     gcv_debug("begin create_schema_tables")
 
-    if(len(tdei_gtfs_csv_validator.__path__) !=1):
+    if(len(tcat_gtfs_csv_validator.__path__) !=1):
         raise Exception("unexpected path length in gcv_support")
 
-    mod_path = Path(tdei_gtfs_csv_validator.__path__[0])
+    mod_path = Path(tcat_gtfs_csv_validator.__path__[0])
     dir_path = mod_path / 'schemas' / data_type / schema_version
 
     table_names = []
@@ -133,10 +133,10 @@ def check_schema(file_path, schema_table, file_table, con):
 def check_rules(data_type, schema_version, con, dir_path):
     gcv_debug("begin check rules") 
 
-    if(len(tdei_gtfs_csv_validator.__path__) !=1):
+    if(len(tcat_gtfs_csv_validator.__path__) !=1):
         raise Exception("unexpected path length in gcv_support")
 
-    mod_path = Path(tdei_gtfs_csv_validator.__path__[0])
+    mod_path = Path(tcat_gtfs_csv_validator.__path__[0])
     rules_file = mod_path / 'rules' / (data_type + "_" + schema_version + "_rules.csv")
 
     df = pd.read_csv(rules_file, skipinitialspace='True', 
@@ -210,10 +210,10 @@ def drop_all_tables(data_type, con):
 def check_locations_geojson(data_type, schema_version, ifile_path):
     gcv_debug("Testing geojson file: " + str(ifile_path))
         
-    if(len(tdei_gtfs_csv_validator.__path__) !=1):
+    if(len(tcat_gtfs_csv_validator.__path__) !=1):
         raise Exception("unexpected path length in gcv_support")
 
-    mod_path = Path(tdei_gtfs_csv_validator.__path__[0])
+    mod_path = Path(tcat_gtfs_csv_validator.__path__[0])
     
     # get jsonschema for flex locations.geojson file
     sfile_path = mod_path / 'schemas' / data_type / schema_version / 'locations_geojson_jsonschema.json'

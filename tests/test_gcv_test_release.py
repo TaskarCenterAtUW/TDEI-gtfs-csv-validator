@@ -3,9 +3,9 @@ import fnmatch
 import unittest
 from pathlib import Path
 from unittest.mock import patch, MagicMock
-from tdei_gtfs_csv_validator import gcv_test_release
-from tdei_gtfs_csv_validator import exceptions as gcvex
-from tdei_gtfs_csv_validator import gcv_support as gcvsup
+from tcat_gtfs_csv_validator import gcv_test_release
+from tcat_gtfs_csv_validator import exceptions as gcvex
+from tcat_gtfs_csv_validator import gcv_support as gcvsup
 
 TEST_FILES_PATH = f'{Path.cwd()}/tests/test_files'
 
@@ -21,7 +21,7 @@ class TestGVCTestRelease(unittest.TestCase):
         data_type = 'gtfs_pathways'
         schema_version = 'v1.0'
         input_path = PATHWAYS_SUCCESS_FILE
-        with patch('tdei_gtfs_csv_validator.gcv_test_release.test_release') as mock_test_release:
+        with patch('tcat_gtfs_csv_validator.gcv_test_release.test_release') as mock_test_release:
             try:
                 gcv_test_release.test_release(data_type, schema_version, input_path)
             except gcvex.GCVError as err:
@@ -30,7 +30,7 @@ class TestGVCTestRelease(unittest.TestCase):
                 # Verify test_release was called once
             mock_test_release.assert_called_once_with(data_type, schema_version, input_path)
 
-    @patch('tdei_gtfs_csv_validator.gcv_test_release.test_release')
+    @patch('tcat_gtfs_csv_validator.gcv_test_release.test_release')
     def test_gtfs_pathways_fail(self, mock_test_release):
         data_type = 'gtfs_pathways'
         schema_version = 'v1.0'
@@ -43,7 +43,7 @@ class TestGVCTestRelease(unittest.TestCase):
         # Verify test_release was called once
         mock_test_release.assert_called_once_with(data_type, schema_version, input_path)
 
-    @patch('tdei_gtfs_csv_validator.gcv_test_release.test_release')
+    @patch('tcat_gtfs_csv_validator.gcv_test_release.test_release')
     def test_gtfs_pathways_fail_with_wrong_schema(self, mock_test_release):
         data_type = 'gtfs_pathways'
         schema_version = 'v2.0'
@@ -60,7 +60,7 @@ class TestGVCTestRelease(unittest.TestCase):
         data_type = 'gtfs_pathways'
         schema_version = 'v1.0'
         input_path = MAC_GENERATED_FILE
-        with patch('tdei_gtfs_csv_validator.gcv_test_release.test_release') as mock_test_release:
+        with patch('tcat_gtfs_csv_validator.gcv_test_release.test_release') as mock_test_release:
             try:
                 gcv_test_release.test_release(data_type, schema_version, input_path)
             except gcvex.GCVError as err:
@@ -73,7 +73,7 @@ class TestGVCTestRelease(unittest.TestCase):
         data_type = 'gtfs_flex'
         schema_version = 'v2.0'
         input_path = FLEX_SUCCESS_FILE
-        with patch('tdei_gtfs_csv_validator.gcv_test_release.test_release') as mock_test_release:
+        with patch('tcat_gtfs_csv_validator.gcv_test_release.test_release') as mock_test_release:
             try:
                 gcv_test_release.test_release(data_type, schema_version, input_path)
             except gcvex.GCVError as err:
@@ -82,7 +82,7 @@ class TestGVCTestRelease(unittest.TestCase):
                 # Verify test_release was called once
             mock_test_release.assert_called_once_with(data_type, schema_version, input_path)
 
-    @patch('tdei_gtfs_csv_validator.gcv_test_release.test_release')
+    @patch('tcat_gtfs_csv_validator.gcv_test_release.test_release')
     def test_gtfs_flex_failure(self, mock_test_release):
         data_type = 'gtfs_flex'
         schema_version = 'v2.0'
@@ -95,7 +95,7 @@ class TestGVCTestRelease(unittest.TestCase):
         mock_test_release.assert_called_once_with(data_type, schema_version, input_path)
 
     @patch('shutil.rmtree')
-    @patch('tdei_gtfs_csv_validator.gcv_support.drop_all_tables')
+    @patch('tcat_gtfs_csv_validator.gcv_support.drop_all_tables')
     def test_clean_up_con_not_none_extracted_true(self, mock_drop_all_tables, mock_rmtree):
         con = MagicMock()
         data_type = 'gtfs_pathways'
@@ -109,7 +109,7 @@ class TestGVCTestRelease(unittest.TestCase):
         mock_rmtree.assert_called_once_with(dir_path)
 
     @patch('shutil.rmtree')
-    @patch('tdei_gtfs_csv_validator.gcv_support.drop_all_tables')
+    @patch('tcat_gtfs_csv_validator.gcv_support.drop_all_tables')
     def test_clean_up_con_not_none_extracted_false(self, mock_drop_all_tables, mock_rmtree):
         con = MagicMock()
         data_type = 'gtfs_pathways'
@@ -123,7 +123,7 @@ class TestGVCTestRelease(unittest.TestCase):
         mock_rmtree.assert_not_called()
 
     @patch('shutil.rmtree')
-    @patch('tdei_gtfs_csv_validator.gcv_support.drop_all_tables')
+    @patch('tcat_gtfs_csv_validator.gcv_support.drop_all_tables')
     def test_clean_up_con_none_extracted_true(self, mock_drop_all_tables, mock_rmtree):
         con = None
         data_type = 'gtfs_pathways'
@@ -136,7 +136,7 @@ class TestGVCTestRelease(unittest.TestCase):
         mock_rmtree.assert_called_once_with(dir_path)
 
     @patch('shutil.rmtree')
-    @patch('tdei_gtfs_csv_validator.gcv_support.drop_all_tables')
+    @patch('tcat_gtfs_csv_validator.gcv_support.drop_all_tables')
     def test_clean_up_con_none_extracted_false(self, mock_drop_all_tables, mock_rmtree):
         con = None
         data_type = 'gtfs_pathways'
@@ -148,7 +148,7 @@ class TestGVCTestRelease(unittest.TestCase):
         mock_drop_all_tables.assert_not_called()
         mock_rmtree.assert_not_called()
 
-    @patch('tdei_gtfs_csv_validator.gcv_support.test_csv_file')
+    @patch('tcat_gtfs_csv_validator.gcv_support.test_csv_file')
     def test_txt_file(self, mock_test_csv_file):
         data_type = 'gtfs_pathways'
         schema_version = 'v1'
@@ -159,7 +159,7 @@ class TestGVCTestRelease(unittest.TestCase):
 
         mock_test_csv_file.assert_called_once_with(data_type, file_path, con)
 
-    @patch('tdei_gtfs_csv_validator.gcv_support.check_locations_geojson')
+    @patch('tcat_gtfs_csv_validator.gcv_support.check_locations_geojson')
     def test_geojson_file_flex(self, mock_check_locations_geojson):
         data_type = 'gtfs_flex'
         schema_version = 'v1'
@@ -170,7 +170,7 @@ class TestGVCTestRelease(unittest.TestCase):
 
         mock_check_locations_geojson.assert_called_once_with(data_type, schema_version, file_path)
 
-    @patch('tdei_gtfs_csv_validator.gcv_support.gcv_log')
+    @patch('tcat_gtfs_csv_validator.gcv_support.gcv_log')
     def test_hidden_file(self, mock_gcv_log):
         data_type = 'gtfs_pathways'
         schema_version = 'v1'
@@ -181,7 +181,7 @@ class TestGVCTestRelease(unittest.TestCase):
 
         mock_gcv_log.assert_called_once_with("skipping file: " + str(file_path))
 
-    @patch('tdei_gtfs_csv_validator.gcv_support.gcv_log')
+    @patch('tcat_gtfs_csv_validator.gcv_support.gcv_log')
     def test_no_extension_file(self, mock_gcv_log):
         data_type = 'gtfs_pathways'
         schema_version = 'v1'

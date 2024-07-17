@@ -2,7 +2,7 @@
 import os
 import git
 from datetime import date
-from tdei_gtfs_csv_validator.version import __version__
+from tcat_gtfs_csv_validator.version import __version__
 
 project_path = os.path.dirname(os.path.abspath(__file__))
 version_file_path = '{}/version.py'.format(project_path)
