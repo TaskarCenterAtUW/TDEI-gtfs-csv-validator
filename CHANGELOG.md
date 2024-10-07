@@ -1,3 +1,8 @@
+# 0.0.39
+
+- Fixed `local variable 'schema_table' referenced before assignment`
+- Updated version to 0.0.39
+
 # 0.0.38
 
 - Schema folder is not getting added to package, fixed that issue
