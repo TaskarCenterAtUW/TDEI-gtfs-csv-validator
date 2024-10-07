@@ -239,6 +239,8 @@ def check_locations_geojson(data_type, schema_version, ifile_path):
 
 def test_csv_file(data_type,file_path,con):
     gcv_debug("Testing csv file: " + str(file_path))
+    schema_table = None
+    file_table = None
     # data_type is pathways, or flex 
     if(data_type == 'gtfs_pathways'):
         if(re.search('levels', file_path.name, re.IGNORECASE) != None):  
@@ -264,7 +266,8 @@ def test_csv_file(data_type,file_path,con):
         raise gcvex.GCVUnexpectedDataTypeError(data_type)
         
     # file_path, data_type, con
-    check_schema(file_path, schema_table, file_table, con)
+    if schema_table and file_table:
+        check_schema(file_path, schema_table, file_table, con)
 
 # debug_log function provides internal support for debugging for the gcv
 # intended use is to replace the internals of this function with code 
