@@ -1,6 +1,6 @@
 # 0.0.40
 
-- Fixed `got file not dir in tempdir, zio extraction error`
+- Fixed `got file not dir in tempdir, zip extraction error`
 - Added support for multi-level zip extraction
 - Updated version to 0.0.40
 
