@@ -11,20 +11,15 @@ from pathlib import Path
 
 
 def _find_directory_with_files(path: Path):
-    """ Recursively find the deepest directory that contains files. """
+    """ Find the deepest directory that contains files using os.walk. """
     deepest_dir = None
 
-    for item in path.iterdir():
-        if item.is_file():
-            # If a file is found, store the parent directory
-            deepest_dir = path
-        elif item.is_dir():
-            # Check this subdirectory recursively
-            result = _find_directory_with_files(item)
-            if result:
-                deepest_dir = result  # Update deepest directory found
+    for dirpath, dirnames, filenames in os.walk(path):
+        # If the current directory contains files, mark it as the deepest directory
+        if filenames:
+            deepest_dir = dirpath
 
-    return deepest_dir
+    return Path(deepest_dir) if deepest_dir else None
 
 
 def test_release(data_type, schema_version, input_path):
@@ -66,6 +61,7 @@ def test_release(data_type, schema_version, input_path):
         else:
             # Assume input is a directory
             dir_path = Path(input_path)
+
         # set up sqlite connection
         # create a temp db in RAM
         # schemas are stored in csv files for clarity and ease of maintenance
