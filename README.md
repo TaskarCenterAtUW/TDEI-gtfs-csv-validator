@@ -1,3 +1,5 @@
+NOTE: This library is right now not used in TDEI system anymore. For all the GTFS Pathway and Flex datasets validation, new repository at [Mobility Data Canonical Validator](https://github.com/TaskarCenterAtUW/TDEI-mobilitydata-canonical-validator) is used
+
 # Summary
 
 This package can be used to validate GTFS CSV files. It is
